@@ -1,0 +1,20 @@
+C:\Users\Samed\AppData\Local\Temporary Projects\ShooterGame\bin\Debug\ShooterGame.exe
+C:\Users\Samed\AppData\Local\Temporary Projects\ShooterGame\bin\Debug\ShooterGame.pdb
+C:\Users\Samed\AppData\Local\Temporary Projects\ShooterGame\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Samed\AppData\Local\Temporary Projects\ShooterGame\obj\Debug\ShooterGame.Properties.Resources.resources
+C:\Users\Samed\AppData\Local\Temporary Projects\ShooterGame\obj\Debug\ShooterGame.csproj.GenerateResource.Cache
+C:\Users\Samed\AppData\Local\Temporary Projects\ShooterGame\obj\Debug\ShooterGame.exe
+C:\Users\Samed\AppData\Local\Temporary Projects\ShooterGame\obj\Debug\ShooterGame.pdb
+C:\Users\Samed\AppData\Local\Temporary Projects\ShooterGame\obj\Debug\ShooterGame.GameForm.resources
+C:\Users\Samed\AppData\Local\Temporary Projects\ShooterGame\obj\Debug\ShooterGame.Level.resources
+C:\Users\Samed\AppData\Local\Temporary Projects\ShooterGame\obj\Debug\ShooterGame.Level1.resources
+C:\Users\Samed\Documents\Visual Studio 2008\Projects\ShooterGame\ShooterGame\obj\Debug\ShooterGame.exe
+C:\Users\Samed\Documents\Visual Studio 2008\Projects\ShooterGame\ShooterGame\obj\Debug\ShooterGame.pdb
+C:\Users\Samed\Documents\Visual Studio 2008\Projects\ShooterGame\ShooterGame\bin\Debug\ShooterGame.exe
+C:\Users\Samed\Documents\Visual Studio 2008\Projects\ShooterGame\ShooterGame\bin\Debug\ShooterGame.pdb
+C:\Users\Samed\Documents\Visual Studio 2008\Projects\ShooterGame\ShooterGame\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Samed\Documents\Visual Studio 2008\Projects\ShooterGame\ShooterGame\obj\Debug\ShooterGame.GameForm.resources
+C:\Users\Samed\Documents\Visual Studio 2008\Projects\ShooterGame\ShooterGame\obj\Debug\ShooterGame.Level.resources
+C:\Users\Samed\Documents\Visual Studio 2008\Projects\ShooterGame\ShooterGame\obj\Debug\ShooterGame.Level1.resources
+C:\Users\Samed\Documents\Visual Studio 2008\Projects\ShooterGame\ShooterGame\obj\Debug\ShooterGame.Properties.Resources.resources
+C:\Users\Samed\Documents\Visual Studio 2008\Projects\ShooterGame\ShooterGame\obj\Debug\ShooterGame.csproj.GenerateResource.Cache
