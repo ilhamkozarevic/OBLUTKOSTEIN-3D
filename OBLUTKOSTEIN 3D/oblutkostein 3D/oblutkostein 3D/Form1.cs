@@ -6,17 +6,171 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Diagnostics; // Potrebno da bismo koristili Stopwatch
 
 namespace oblutkostein_3D
 {
     public partial class Form1 : Form
     {
+        int[] allTextures =
+        {
+            //Checkerboard
+            0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
+            0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
+            0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
+            0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
+            0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
+            0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
+            0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
+            0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
+
+            1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0,
+            1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0,
+            1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0,
+            1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0,
+            1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0,
+            1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0,
+            1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0,
+            1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0,
+
+            0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
+            0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
+            0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
+            0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
+            0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
+            0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
+            0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
+            0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
+
+            1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0,
+            1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0,
+            1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0,
+            1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0,
+            1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0,
+            1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0,
+            1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0,
+            1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0,
+
+            //Brick
+            0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+            0,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,0,
+            1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
+            1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
+            1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
+            1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
+            0,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,0,
+            0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+
+            0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+            1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
+            1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
+            0,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,0,
+            0,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,0,
+            1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
+            1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
+            0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+
+            0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+            0,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,0,
+            1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
+            1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
+            1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
+            1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
+            0,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,0,
+            0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+
+            0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+            1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
+            1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
+            0,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,0,
+            0,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,0,
+            1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
+            1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
+            0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+
+            //Window
+            1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
+
+            1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
+            1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
+
+            //Door
+            0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+            0,0,0,1,1,1,1,1, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 1,1,1,1,1,0,0,0,
+            0,0,0,1,0,0,0,1, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 1,0,0,0,1,0,0,0,
+            0,0,0,1,0,0,0,1, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 1,0,0,0,1,0,0,0,
+            0,0,0,1,0,0,0,1, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 1,0,0,0,1,0,0,0,
+
+            0,0,0,1,0,0,0,1, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 1,0,0,0,1,0,0,0,
+            0,0,0,1,0,0,0,1, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 1,0,0,0,1,0,0,0,
+            0,0,0,1,0,0,0,1, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 1,0,0,0,1,0,0,0,
+            0,0,0,1,0,0,0,1, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 1,0,0,0,1,0,0,0,
+            0,0,0,1,0,0,0,1, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 1,0,0,0,1,0,0,0,
+            0,0,0,1,0,0,0,1, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 1,0,0,0,1,0,0,0,
+            0,0,0,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,0,0,0,
+            0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+
+            0,0,0,0,0,0,0,0, 0,0,0,0,0,1,0,1, 1,0,1,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0, 0,0,1,1,1,1,0,1, 1,0,1,1,1,1,0,0, 0,0,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+            0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
+            0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+
+            0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+            0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
+            0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
+            0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
+            0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+            0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
+            0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+            0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
+        };
+
         SolidBrush cetkaMiniMap = new SolidBrush(Color.Yellow);
         Pen olovkaDirection = new Pen(Color.Orange);
         Pen olovkaZid = new Pen(Color.Red, 8);
 
         double playerX = 300, playerY = 300;
-        double speed = 5.0;
+
+        double rotationSpeed = 7.0;
+        double speed = 155.0;
 
         // Igrac delta X, igrac delta Y (X i Y koraci igraca za odredjeni ugao), igrac Ugao (ugao u radijanima pod kojim igrac gleda)
         double playerdX, playerdY, playerA = 0.0;
@@ -27,6 +181,14 @@ namespace oblutkostein_3D
         //Trenutna X i Y pozicija vrha ray-a, ugao pod kojim ray putuje, offset/korak za koji se ray pomjera do sljedece minimap linije
         //te finalna udaljenost do najblizeg zida
         double rx, ry, ra, xoff, yoff, disT;
+
+        //Stoperica koja pocinje brojati od nule cim je pokrenemo sa stopwatch.Start() - ekvivalentno milis u arduinu...
+        Stopwatch stopwatch = new Stopwatch();
+
+        //Pamti tacan trenutak kada se zavrsio prethodni frame
+        //Uzima podatak iz stopwatch-a o tome koliko je tacno proslo od pokretanja programa do ovog trenutka
+        //Izracunava koliko je vremena proteklo između dva frame-a
+        double lastTime = 0, currentTime, deltaTime;
 
         bool goUp, goDown, goLeft, goRight;
 
@@ -48,21 +210,20 @@ namespace oblutkostein_3D
         {
             InitializeComponent();
 
-            // Sprečava treperenje tako što prvo iscrta sve u memoriji, pa onda prikaže gotovu sliku (bez crtanja jednog po jednog elementa)
+            // Sprecava treperenje tako sto prvo iscrta sve u memoriji, pa onda prikaze gotovu sliku (bez crtanja jednog po jednog elementa)
             this.DoubleBuffered = true;
 
             //Client size ne racuna title forme sto nam odgovara, za razliku od Size (512 + 1 zbog praznog mjesta na dnu minimape)
             this.ClientSize = new Size(1024, 513);
 
-            Timer gameTimer = new Timer();
-            gameTimer.Interval = 20;
-            gameTimer.Enabled = true;
-            gameTimer.Tick += new EventHandler(GameTimer_Tick);
-            gameTimer.Start();
+            stopwatch.Start();
+            //Cim se zavrse sve druge naredbe i program bude u tzv. "Wait state-u" (Idle), pokrece se GameLoop funkcija 
+            //Dakle ovim se izvlaci maksimum iz samog procesora racunara na kojem se pokrece igra
+            Application.Idle += GameLoop;
 
             //Prvo racunanje deltaX i deltaY za pocetni ugao
-            playerdX = Math.Cos(playerA) * speed;
-            playerdY = Math.Sin(playerA) * speed;
+            playerdX = Math.Cos(playerA);
+            playerdY = Math.Sin(playerA);
         }
 
         private double distance(double ax, double ay, double bx, double by, double ang)
@@ -225,8 +386,11 @@ namespace oblutkostein_3D
                     }
                 }
 
+                double shade = 1.0;
+
                 if (disV < disH) // Pogodjen prvo vertikalni zid
                 {
+                    shade = 0.5;
                     rx = vx;
                     ry = vy;
                     disT = disV;
@@ -241,8 +405,6 @@ namespace oblutkostein_3D
                 }
                 olovkaDirection.Color = Color.Red;
                 g.DrawLine(olovkaDirection, (int)centerX, (int)centerY, (int)rx, (int)ry);
-                
-                //Nacrtaj 3D zidove
 
                 // Popravljanje "fish-eye" efekta
                 double ca = playerA - ra;
@@ -250,10 +412,47 @@ namespace oblutkostein_3D
                 if (ca > 2 * Math.PI) ca -= 2 * Math.PI;
                 disT = disT * Math.Cos(ca);
 
+                //Nacrtaj 3D zidove
                 double lineH = (mapS * 320) / disT;
                 double lineOff = 160 - lineH / 2;
-                if (lineH > 320) lineH = 320;
-                g.DrawLine(olovkaZid, (int)(r * 8 + 530), (int)lineOff, (int)(r * 8 + 530), (int)(lineH + lineOff));
+
+                //Odredjujemo koliko koraka u teksturi pravimo za svaki piksel na ekranu
+                double ty_step = 32.0 / (double)lineH;
+                //Sluzi za vertikalno centriranje teksture kada je zid visi od ekrana ako je igrac preblizu, izracunavamo koliko redova teksture treba "odsjeći" 
+                //sa vrha i dna kako bi sredina teksture ostala vidljiva na ekranu.
+                double ty_off = 0.0;
+
+                if (lineH > 320)
+                {
+                    // Ako je zid visi od ekrana, izracunaj koliko teksture treba preskociti (offset)
+                    ty_off = (lineH - 320.0) / 2.0;
+                    lineH = 320;
+                }
+
+                //Pocetna Y pozicija u teksturi
+                double ty = ty_off * ty_step;
+                double tx;
+
+                if (shade == 1)
+                {
+                    tx = (int)(rx / 2.0) % 32;
+                    if (ra > 180) tx = 31 - tx;
+                }
+                else
+                {
+                    tx = (int)(ry / 2.0) % 32;
+                    if (ra > 90 && ra < 270) tx = 31 - tx;
+                }
+
+                for (int y = 0; y < lineH; y++)
+                {
+                    int bojaVal = (int)((allTextures[(int)(ty) * 32 + (int) tx] * 255) * shade);
+                    olovkaZid.Color = Color.FromArgb(bojaVal, bojaVal, bojaVal);
+                    g.DrawLine(olovkaZid, (int)(r * 8 + 530), (int)lineOff + y, (int)(r * 8 + 530), (int)lineOff + y + 1);
+
+                    //Pomjeri se dole u teksturi
+                    ty += ty_step;
+                }
 
                 ra += 0.0174533;
                 if (ra < 0) ra += 2 * Math.PI;
@@ -262,19 +461,55 @@ namespace oblutkostein_3D
 
         }
 
-        private void GameTimer_Tick(object sender, EventArgs e)
+        private void GameLoop(object sender, EventArgs e)
         {
+            //Uvodjenjem ovih varijabli rjesavamo problem veceg i manjeg FPS-a, da se igrac koji ima bolje performanse racunara ne bi kretao brze u odnosu na
+            //onog koji ima losije, uvodimo deltaTime koji ce za veci FPS biti znatno manji nego za manji FPS, pa ce se oba igraca kretati jednakom brzinom
+            currentTime = stopwatch.Elapsed.TotalSeconds;
+            deltaTime = currentTime - lastTime;
+            lastTime = currentTime;
+
+            UpdateGame(deltaTime);
+
+            // Proglasava trenutnu sliku starom i ponovo poziva dogadjaj Paint
+            this.Invalidate();
+        }
+
+        private void UpdateGame(double dt)
+        {
+
             if (!(goUp && goDown))
             {
+                //Rjesavamo problem prolazenja igraca kroz zidove tako sto provjeravamo da li je zid ispred ili iza njega za odredjenu vrijednost offseta
+                //Uvodimo dvije offset vrijednosti jer se kolizija moze desiti i sa horizontalnim i sa vertikalnim zidom
+                int xo = 0;
+                int yo = 0;
+
+                //Ako se igrac krece udesno (playerdX > 0) provjerava se vertikalni zid cija je X pozicija za 20 veca od pozicije igraca
+                //Ako se igrac krece ulijevo (playerdX < 0) provjerava se vertikalni zid cija je X pozicija za 20 manja od pozicije igraca
+                if (playerdX < 0) { xo = -20; } else { xo = 20; }
+
+                //Ako se igrac krece prema gore (playerdY < 0) provjerava se horizontalni zid cija je Y pozicija za 20 manja od pozicije igraca
+                //Ako se igrac krece prema dole (playerdY > 0) provjerava se horizontalni zid cija je Y pozicija za 20 veca od pozicije igraca
+                if (playerdY < 0) { yo = -20; } else { yo = 20; }
+
+                int ipx = (int)(playerX / 64.0); // Trenutna kolona na kojoj se nalazi igrac
+                int ipx_add_xo = (int)((playerX + xo) / 64.0); // Kolona ispred igraca (pri kretanju naprijed / lijevo-desno)
+                int ipx_sub_xo = (int)((playerX - xo) / 64.0); // Kolona iza igraca (pri kretanju nazad / lijevo-desno)
+
+                int ipy = (int)(playerY / 64.0); // Trenutni red u kojem se nalazi igrac
+                int ipy_add_yo = (int)((playerY + yo) / 64.0); // Red ispred igraca (pri kretanju naprijed / gore-dole)
+                int ipy_sub_yo = (int)((playerY - yo) / 64.0); // Red iza igraca (pri kretanju nazad / gore-dole)
+
                 if (goUp)
                 {
-                    playerX += playerdX;
-                    playerY += playerdY;
+                    if (map[ipy * mapX + ipx_add_xo] == 0) { playerX += playerdX * speed * dt; } //Sudar sa vertikalnim zidom - kretanje naprijed
+                    if (map[ipy_add_yo * mapX + ipx] == 0) { playerY += playerdY * speed * dt; } //Sudar sa horizontalnim zidom - kretanje naprijed
                 }
                 if (goDown)
                 {
-                    playerX -= playerdX;
-                    playerY -= playerdY;
+                    if (map[ipy * mapX + ipx_sub_xo] == 0) { playerX -= playerdX * speed * dt; } // Sudar sa vertikalnim zidom - kretanje nazad
+                    if (map[ipy_sub_yo * mapX + ipx] == 0) { playerY -= playerdY * speed * dt; } // Sudar sa horizontalnim zidom - kretanje nazad
                 }
             }
             //Za kretanje igraca naprijed/nazad ne dodajemo vise fiksan korak zato sto igrac ne mora gledati pod uglom od 90 stepeni
@@ -283,26 +518,20 @@ namespace oblutkostein_3D
             {
                 if (goLeft)
                 {
-                    playerA -= 0.1;
+                    playerA -= rotationSpeed * dt;
                     if (playerA < 0) playerA += 2.0 * Math.PI;
-                    playerdX = Math.Cos(playerA) * speed;
-                    playerdY = Math.Sin(playerA) * speed;
+                    playerdX = Math.Cos(playerA);
+                    playerdY = Math.Sin(playerA);
                 }
-                
+
                 if (goRight)
                 {
-                    playerA += 0.1;
+                    playerA += rotationSpeed * dt;
                     if (playerA > 2.0 * Math.PI) playerA -= 2.0 * Math.PI;
-                    playerdX = Math.Cos(playerA) * speed;
-                    playerdY = Math.Sin(playerA) * speed;
+                    playerdX = Math.Cos(playerA);
+                    playerdY = Math.Sin(playerA);
                 }
             }
-            //Posto nam sada tipke A i D ne slize za kretanje nego za rotiranje rotacija se racuna pomocu ugla playerA koji se uvecava ili smanjuje u radijanima
-            //u zavisnosti od tipke, te se vrijednosti koraka po osama (deltaX i deltaY) racunaju pomocu trigonometrijskih funkcija sinusa i kosinusa od ugla
-            //pod kojim gleda igrac, te vrijednosti brzine rotacije
-
-            // Proglasava trenutnu sliku starom i ponovo poziva dogadjaj Paint
-            this.Invalidate();
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
