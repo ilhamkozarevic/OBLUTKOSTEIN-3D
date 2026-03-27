@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -350,7 +350,7 @@ namespace oblutkostein_3D
                 {
                     //Pomocu trigonometrijske funkcije negativni tangens pronalazimo koordinate najblize vertikalne linije,
                     //te X i Y korake do sljedece vertikalne linije
-                    rx = ((int)(playerX / 64) * 64) +64;
+                    rx = ((int)(playerX / 64) * 64) + 64;
                     ry = (playerX - rx) * nTan + playerY;
                     xoff = 64;
                     yoff = -xoff * nTan;
@@ -412,45 +412,53 @@ namespace oblutkostein_3D
                 if (ca > 2 * Math.PI) ca -= 2 * Math.PI;
                 disT = disT * Math.Cos(ca);
 
+                if (disT < 0.1) disT = 0.1;
+
                 //Nacrtaj 3D zidove
                 double lineH = (mapS * 320) / disT;
+                double lineH_full = lineH;
                 double lineOff = 160 - lineH / 2;
+                if (lineH > 320) lineH = 320;
+                if (lineOff < 0) lineOff = 0;
 
                 //Odredjujemo koliko koraka u teksturi pravimo za svaki piksel na ekranu
-                double ty_step = 32.0 / (double)lineH;
+                double ty_step = 32.0 / lineH_full;
                 //Sluzi za vertikalno centriranje teksture kada je zid visi od ekrana ako je igrac preblizu, izracunavamo koliko redova teksture treba "odsjeći" 
                 //sa vrha i dna kako bi sredina teksture ostala vidljiva na ekranu.
                 double ty_off = 0.0;
 
-                if (lineH > 320)
+                if (lineH_full > 320)
                 {
                     // Ako je zid visi od ekrana, izracunaj koliko teksture treba preskociti (offset)
-                    ty_off = (lineH - 320.0) / 2.0;
-                    lineH = 320;
+                    ty_off = (lineH_full - 320.0) / 2.0;
                 }
 
                 //Pocetna Y pozicija u teksturi
                 double ty = ty_off * ty_step;
                 double tx;
 
-                if (shade == 1)
+                if (shade == 0.5)
                 {
-                    tx = (int)(rx / 2.0) % 32;
-                    if (ra > 180) tx = 31 - tx;
+                    tx = (ry / 2.0) % 32;
+                    if (ra > Math.PI / 2 && ra < 3 * Math.PI / 2) tx = 31 - tx;
                 }
                 else
                 {
-                    tx = (int)(ry / 2.0) % 32;
-                    if (ra > 90 && ra < 270) tx = 31 - tx;
+                    tx = (rx / 2.0) % 32;
+                    if (ra > Math.PI) tx = 31 - tx;
                 }
 
                 for (int y = 0; y < lineH; y++)
                 {
-                    int bojaVal = (int)((allTextures[(int)(ty) * 32 + (int) tx] * 255) * shade);
+                    int ty_idx = (int)ty & 31; 
+                    int tx_idx = (int)tx & 31;
+
+                    int pixelColor = allTextures[ty_idx * 32 + tx_idx];
+                    int bojaVal = (int)((pixelColor * 255) * shade);
+                    
                     olovkaZid.Color = Color.FromArgb(bojaVal, bojaVal, bojaVal);
                     g.DrawLine(olovkaZid, (int)(r * 8 + 530), (int)lineOff + y, (int)(r * 8 + 530), (int)lineOff + y + 1);
 
-                    //Pomjeri se dole u teksturi
                     ty += ty_step;
                 }
 
