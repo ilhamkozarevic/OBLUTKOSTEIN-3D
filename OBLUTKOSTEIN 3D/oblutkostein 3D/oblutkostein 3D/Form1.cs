@@ -191,13 +191,13 @@ namespace oblutkostein_3D
 
         int mapX = 8, mapY = 8, mapS = 64;
 
-        int[] map = 
+        int[] mapW = 
         {
             1, 1, 1, 2, 1, 2, 1, 2,
-            1, 0, 1, 0, 0, 0, 0, 1,
-            1, 0, 1, 0, 0, 0, 0, 2,
-            1, 0, 1, 0, 0, 0, 0, 1,
-            1, 0, 0, 0, 0, 0, 0, 2,
+            1, 0, 0, 2, 0, 0, 0, 1,
+            1, 0, 0, 4, 0, 2, 0, 2,
+            1, 2, 4, 2, 0, 0, 0, 1,
+            3, 0, 0, 0, 0, 0, 0, 2,
             1, 0, 0, 0, 0, 1, 0, 1,
             1, 0, 0, 0, 0, 0, 0, 2,
             1, 1, 1, 1, 1, 1, 1, 2,
@@ -240,7 +240,7 @@ namespace oblutkostein_3D
                 for (int x = 0; x < mapX; x++)
                 {
                     //Zbog memorijske produktivnosti umjesto 2D niza koristili smo 1D niz i pristupali elementima kao da je 2D niz preko formule: map[y * mapX + x]
-                    if (map[y * mapX + x] > 0) { cetkaMiniMap.Color = Color.White; } else { cetkaMiniMap.Color = Color.Black; }
+                    if (mapW[y * mapX + x] > 0) { cetkaMiniMap.Color = Color.White; } else { cetkaMiniMap.Color = Color.Black; }
                     xo = x * mapS;
                     yo = y * mapS;
 
@@ -308,9 +308,9 @@ namespace oblutkostein_3D
                     my = (int)(ry / 64); // Dijelimo sa 64 da dobijemo red
                     mp = my * mapX + mx; // Pretvaramo 2D (red, kolona) u indeks za 1D niz map[]
 
-                    if (mp > 0 && mp < mapX * mapY && map[mp] > 0) //Provjera da li je pogodjen horizontalni zid
+                    if (mp > 0 && mp < mapX * mapY && mapW[mp] > 0) //Provjera da li je pogodjen horizontalni zid
                     {
-                        hmt = map[mp];
+                        hmt = mapW[mp];
                         //Pohranjujemo podatke o X i Y poziciji gdje je horizontalni zid pogodjen,
                         //te pomocu pitagorine teoreme izracunavamo udaljenost ray-a od igraca do tog pogodjenog horizontalnog zida
                         hx = rx;
@@ -369,9 +369,9 @@ namespace oblutkostein_3D
                     my = (int)(ry / 64); // Dijelimo sa 64 da dobijemo red
                     mp = my * mapX + mx; // Pretvaramo 2D (red, kolona) u indeks za 1D niz map[]
 
-                    if (mp > 0 && mp < mapX * mapY && map[mp] > 0) //Provjera da li je pogodjen vertikalni zid
+                    if (mp > 0 && mp < mapX * mapY && mapW[mp] > 0) //Provjera da li je pogodjen vertikalni zid
                     {
-                        vmt = map[mp];
+                        vmt = mapW[mp];
                         //Pohranjujemo podatke o X i Y poziciji gdje je vertikalni zid pogodjen,
                         //te pomocu pitagorine teoreme izracunavamo udaljenost ray-a od igraca do tog pogodjenog vertikalnog zida
                         vx = rx;
@@ -522,13 +522,13 @@ namespace oblutkostein_3D
 
                 if (goUp)
                 {
-                    if (map[ipy * mapX + ipx_add_xo] == 0) { playerX += playerdX * speed * dt; } //Sudar sa vertikalnim zidom - kretanje naprijed
-                    if (map[ipy_add_yo * mapX + ipx] == 0) { playerY += playerdY * speed * dt; } //Sudar sa horizontalnim zidom - kretanje naprijed
+                    if (mapW[ipy * mapX + ipx_add_xo] == 0) { playerX += playerdX * speed * dt; } //Sudar sa vertikalnim zidom - kretanje naprijed
+                    if (mapW[ipy_add_yo * mapX + ipx] == 0) { playerY += playerdY * speed * dt; } //Sudar sa horizontalnim zidom - kretanje naprijed
                 }
                 if (goDown)
                 {
-                    if (map[ipy * mapX + ipx_sub_xo] == 0) { playerX -= playerdX * speed * dt; } // Sudar sa vertikalnim zidom - kretanje nazad
-                    if (map[ipy_sub_yo * mapX + ipx] == 0) { playerY -= playerdY * speed * dt; } // Sudar sa horizontalnim zidom - kretanje nazad
+                    if (mapW[ipy * mapX + ipx_sub_xo] == 0) { playerX -= playerdX * speed * dt; } // Sudar sa vertikalnim zidom - kretanje nazad
+                    if (mapW[ipy_sub_yo * mapX + ipx] == 0) { playerY -= playerdY * speed * dt; } // Sudar sa horizontalnim zidom - kretanje nazad
                 }
             }
             //Za kretanje igraca naprijed/nazad ne dodajemo vise fiksan korak zato sto igrac ne mora gledati pod uglom od 90 stepeni
@@ -559,6 +559,20 @@ namespace oblutkostein_3D
             if (e.KeyCode == Keys.S) goDown = true;
             if (e.KeyCode == Keys.A) goLeft = true;
             if (e.KeyCode == Keys.D) goRight = true;
+            if (e.KeyCode == Keys.E)
+            {
+                int xo = 0;
+                if (playerdX < 0) { xo = -25; } else { xo = 25; }
+                int yo = 0;
+                if (playerdY < 0) { yo = -25; } else { yo = 25; }
+
+                int ipx = (int)(playerX / 64.0); // Trenutna kolona na kojoj se nalazi igrac
+                int ipx_add_xo = (int)((playerX + xo) / 64.0); // Kolona ispred igraca (pri kretanju naprijed / lijevo-desno)
+                
+                int ipy = (int)(playerY / 64.0); // Trenutni red u kojem se nalazi igrac
+                int ipy_add_yo = (int)((playerY + yo) / 64.0); // Red ispred igraca (pri kretanju naprijed / gore-dole)
+                if (mapW[ipy_add_yo * mapX + ipx_add_xo] == 4) { mapW[ipy_add_yo * mapX + ipx_add_xo] = 0; }
+            }
         }
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
