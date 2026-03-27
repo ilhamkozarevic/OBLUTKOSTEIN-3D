@@ -467,7 +467,11 @@ namespace oblutkostein_3D
                     int pixelColor = allTextures[texOffset + (ty_idx * 32 + tx_idx)];
                     int bojaVal = (int)((pixelColor * 255) * shade);
 
-                    olovkaZid.Color = Color.FromArgb(bojaVal, bojaVal, bojaVal);
+                    if (hitWallType == 1) { olovkaZid.Color = Color.FromArgb(bojaVal, bojaVal / 2, bojaVal / 2); }
+                    if (hitWallType == 2) { olovkaZid.Color = Color.FromArgb(bojaVal, bojaVal, bojaVal / 2); }
+                    if (hitWallType == 3) { olovkaZid.Color = Color.FromArgb(bojaVal / 2, bojaVal / 2, bojaVal); }
+                    if (hitWallType == 4) { olovkaZid.Color = Color.FromArgb(bojaVal / 2, bojaVal, bojaVal / 2); }
+
                     g.DrawLine(olovkaZid, (int)(r * 8 + 530), (int)lineOff + y, (int)(r * 8 + 530), (int)lineOff + y + 1);
 
                     ty += ty_step;
