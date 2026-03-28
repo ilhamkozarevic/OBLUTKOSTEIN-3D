@@ -1,4 +1,4 @@
-﻿﻿﻿using System;
+﻿﻿﻿﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,7 +12,7 @@ namespace oblutkostein_3D
 {
     public partial class Form1 : Form
     {
-        int[] allTextures=               //all 32x32 textures
+        int[] allTextures =               //all 32x32 textures
         {
          //Checkerboard
          0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
@@ -203,6 +203,30 @@ namespace oblutkostein_3D
             1, 1, 1, 1, 1, 1, 1, 2,
         };
 
+        int[] mapF = 
+        {
+            2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2,
+            3, 3, 3, 3, 3, 3, 3, 3,
+            3, 3, 3, 3, 3, 3, 3, 3,
+            2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2,
+            3, 3, 3, 3, 3, 3, 3, 3,
+            3, 3, 3, 3, 3, 3, 3, 3,
+        };
+
+        int[] mapC = 
+        {
+            2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2,
+            1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1,
+            2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2,
+            1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1,
+        };
+
         public Form1()
         {
             InitializeComponent();
@@ -222,6 +246,10 @@ namespace oblutkostein_3D
             playerdX = Math.Cos(playerA);
             playerdY = Math.Sin(playerA);
         }
+
+        double degToRad(double a) { return a * Math.PI / 180.0; }
+
+        double FixAng(double a) { if (a > 360) { a -= 360; } if (a < 0) { a += 360; } return a; }
 
         private double distance(double ax, double ay, double bx, double by, double ang)
         {
@@ -266,7 +294,7 @@ namespace oblutkostein_3D
 
             for (int r = 0; r < 60; r++)
             {
-                int vmt = 0; 
+                int vmt = 0;
                 int hmt = 0;
 
                 //Provjeri horizontalne linije
@@ -477,7 +505,34 @@ namespace oblutkostein_3D
                     ty += ty_step;
                 }
 
-                ra += 0.0174533;
+                //Nacrtaj pod
+                for (y = (int)(lineOff + lineH); y < 320; y++)
+                {
+                    double dy = y - (320 / 2.0);
+                    double deg = ra;
+                    double raFix = Math.Cos(playerA - ra);
+
+                    tx = playerX / 2 + Math.Cos(deg) * 158 * 32 / dy / raFix;
+                    ty = playerY / 2 + Math.Sin(deg) * 158 * 32 / dy / raFix;
+
+                    int mp = mapF[(int)(ty / 32.0) * mapX + (int)(tx / 32.0)] * 32 * 32;
+
+                    int pixelColor = (int)(allTextures[((int)(ty)&31)*32 + ((int)(tx)&31)+mp]) * 255;
+                    olovkaZid.Color = Color.FromArgb((int)(pixelColor/1.3), (int)(pixelColor/1.3), pixelColor);
+
+                    g.DrawLine(olovkaZid, (int)(r * 8 + 530), (int)y, (int)(r * 8 + 530), (int)y + 1);
+
+
+                    //Nacrtaj krov
+                    mp = mapC[(int)(ty / 32.0) * mapX + (int)(tx / 32.0)] * 32 * 32;
+
+                    pixelColor = (int)(allTextures[((int)(ty) & 31) * 32 + ((int)(tx) & 31) + mp]) * 255;
+                    olovkaZid.Color = Color.FromArgb((int)(pixelColor/2.0), (int)(pixelColor/1.2), (int)(pixelColor/2.0));
+
+                    g.DrawLine(olovkaZid, (int)(r * 8 + 530), (int)320 - y, (int)(r * 8 + 530), (int)320 - y + 1);
+                }
+
+                    ra += 0.0174533;
                 if (ra < 0) ra += 2 * Math.PI;
                 if (ra > 2 * Math.PI) ra -= 2 * Math.PI;
             }
@@ -572,7 +627,7 @@ namespace oblutkostein_3D
 
                 int ipx = (int)(playerX / 64.0); // Trenutna kolona na kojoj se nalazi igrac
                 int ipx_add_xo = (int)((playerX + xo) / 64.0); // Kolona ispred igraca (pri kretanju naprijed / lijevo-desno)
-                
+
                 int ipy = (int)(playerY / 64.0); // Trenutni red u kojem se nalazi igrac
                 int ipy_add_yo = (int)((playerY + yo) / 64.0); // Red ispred igraca (pri kretanju naprijed / gore-dole)
                 if (mapW[ipy_add_yo * mapX + ipx_add_xo] == 4) { mapW[ipy_add_yo * mapX + ipx_add_xo] = 0; }
