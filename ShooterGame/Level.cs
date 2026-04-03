@@ -88,7 +88,10 @@ namespace ShooterGame
         {
  	        base.OnPaint(e);
 
+
             e.Graphics.Clear(Color.Black);
+            if (this.DesignMode) return; // ako smo u designeru ne izvrsava se kod
+
             DrawLevel(e.Graphics);
             
             using (Pen p = new Pen(Color.DarkSlateGray, 1))
@@ -104,9 +107,8 @@ namespace ShooterGame
                 }  
             }
 
-
-            DrawPlayer(e.Graphics);
             Raycaster.DrawRays3D(e.Graphics);
+            DrawPlayer(e.Graphics);
 
             // TODO Draw Enemies etc.
 
@@ -127,9 +129,9 @@ namespace ShooterGame
         {
             using (SolidBrush s = new SolidBrush(Color.Blue))
             {
-                g.FillEllipse(s, (int)Math.Round(Player.x) - Player.width, (int)Math.Round(Player.y) - Player.height, 2 * Player.width, 2 * Player.height);
+                g.FillEllipse(s, (int)Player.x - Player.width, (int)Player.y - Player.height, 2 * Player.width, 2 * Player.height);
                 g.DrawRectangle(new Pen(Color.Red, 1), Player.hitbox);
-                g.DrawLine(new Pen(Color.Yellow, 2), (int)Math.Round(Player.x), (int)Math.Round(Player.y), (int)Math.Round(Player.dirX), (int)Math.Round(Player.dirY));
+                g.DrawLine(new Pen(Color.Yellow, 2), (int)Player.x, (int)Player.y, (int)Player.dirX, (int)Player.dirY);
             }
         }
     }

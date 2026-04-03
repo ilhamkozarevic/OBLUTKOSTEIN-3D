@@ -30,9 +30,9 @@ namespace ShooterGame
         private static double xVel = 0;
         private static double yVel = 0;
 
-        public static double acceleration = 1000; // ubrzanje
+        public static double acceleration = 255; // ubrzanje
         public static double friction = 20;     // trenje (usporava)
-        public static double terminalVel = 255;  // maksimalna brzina
+        public static double terminalVel = 100;  // maksimalna brzina
 
         // ZA ROTIRANJE
 
@@ -47,13 +47,21 @@ namespace ShooterGame
 
         public static void HandleMovement()
         {
+            // 3D movement sistem
+
+            double fwdX  = Math.Cos(angle);
+            double fwdY  = Math.Sin(angle);
+
+            double sideX =  fwdY;
+            double sideY = -fwdX;
+
             moveDirX = 0;
             moveDirY = 0;
 
-            if (up)    moveDirY = -1;
-            if (down)  moveDirY =  1;
-            if (left)  moveDirX = -1;
-            if (right) moveDirX =  1;
+            if (up)    { moveDirY +=  fwdY; moveDirX += fwdX;  }
+            if (down)  { moveDirY -=  fwdY; moveDirX -= fwdX;  }
+            if (left)  { moveDirY += sideY; moveDirX += sideX; }
+            if (right) { moveDirY -= sideY; moveDirX -= sideX; }
 
             double directionVector = Math.Sqrt(moveDirX * moveDirX + moveDirY * moveDirY); // vektorski zbir vektora smjera x i y
             if (directionVector > 0)
@@ -81,7 +89,7 @@ namespace ShooterGame
             x += xVel * GameForm.deltaTime;
             HandleCollisionsX();
 
-            y  += yVel * GameForm.deltaTime;
+            y += yVel * GameForm.deltaTime;
             HandleCollisionsY();
         }
 
@@ -99,10 +107,13 @@ namespace ShooterGame
 
         private static void UpdateHitbox()
         {
+            int xBound = (xVel > 0) ? (int)Math.Ceiling(x) : (int)Math.Floor(x);
+            int yBound = (yVel > 0) ? (int)Math.Ceiling(y) : (int)Math.Floor(y);
+
             hitbox = new Rectangle
             (
-                (int)Math.Round(x) - width, 
-                (int)Math.Round(y) - height, 
+                xBound - width,
+                yBound - height, 
                 2 * width, 
                 2 * height
             );
@@ -116,7 +127,7 @@ namespace ShooterGame
             {
                 if (!hitbox.IntersectsWith(rect)) continue;
 
-                if (xVel > 0) x = rect.Left - width;
+                if (xVel > 0) x = rect.Left  - width;
                 if (xVel < 0) x = rect.Right + width;
 
                 xVel = 0;
