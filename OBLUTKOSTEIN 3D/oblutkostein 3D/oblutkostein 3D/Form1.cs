@@ -6,69 +6,52 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using System.Diagnostics; // Potrebno da bismo koristili Stopwatch
+using System.Diagnostics; // Potrebno za Stopwatch
 
 namespace oblutkostein_3D
 {
     public partial class Form1 : Form
     {
-        int[] allTextures =               //all 32x32 textures
+        int[] allTextures =               //sve 32x32 teksture
         {
-         //Checkerboard
-         0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
-         0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
-         0,0,0,0,0,1,1,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
-         0,0,1,1,1,1,1,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
-         0,0,1,1,1,1,1,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
-         0,0,0,0,0,1,1,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
-         0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
-         0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
+         // Oblutak
+         0,0,0,0,0,0,0,0, 0,0,0,0,0,1,1,1, 1,1,1,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+         0,0,0,0,0,0,0,0, 0,0,1,1,1,1,1,1, 1,1,1,1,1,1,0,0, 0,0,0,0,0,0,0,0,
+         0,0,0,0,0,0,0,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0,
+         0,0,0,0,0,0,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,0,0,0,0,0,0,0,
+         0,0,0,0,0,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,0,0,0,0,0,0,
+         0,0,0,0,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,0,0,0,0,0,
+         0,0,0,0,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,0,0,0,0,0,
+         0,0,0,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,0,0,0,0,
 
-         1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 
-         1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 
-         1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 
-         1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 
-         1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 
-         1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 
-         1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 
-         1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0,
+         0,0,0,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,0,0,0,0,
+         0,0,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,0,0,0,
+         0,0,1,1,1,1,0,0, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,0,0, 1,1,1,1,1,0,0,0,
+         0,0,1,1,1,0,0,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,0,0,0, 0,1,1,1,1,0,0,0,
+         0,0,1,1,1,0,0,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,0,0,0, 0,1,1,1,1,0,0,0,
+         0,0,1,1,1,1,0,0, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,0,0, 1,1,1,1,1,0,0,0,
+         0,0,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,0,0,0,
+         0,0,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,0,0,0,
 
-         0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
-         0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
-         0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
-         0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
-         0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
-         0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
-         0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
-         0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,
+         0,0,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,0,0,0,
+         0,0,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,0,0,0,
+         0,0,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,0,0,0,
+         0,0,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,0,0,0,
+         0,0,0,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,0,0,0,0,
+         0,0,0,1,1,1,1,1, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,0,1, 1,1,1,1,0,0,0,0,
+         0,0,0,0,1,1,1,1, 1,0,1,1,1,1,1,1, 1,1,1,1,1,0,1,1, 1,1,1,0,0,0,0,0,
+         0,0,0,0,0,1,1,1, 1,1,0,0,0,0,0,0, 0,0,0,0,0,1,1,1, 1,0,0,0,0,0,0,0,
 
-         1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 
-         1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 
-         1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 
-         1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 
-         1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 
-         1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 
-         1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 
-         1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 
-         //Brick
+         0,0,0,0,0,0,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,0,0,0,0,0,0,0,
+         0,0,0,0,0,0,0,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,0, 0,0,0,0,0,0,0,0,0,
+         0,0,0,0,0,0,0,0, 0,1,1,1,1,1,1,1, 1,1,1,1,0,0,0,0, 0,0,0,0,0,0,0,0,
+         0,0,0,0,0,0,0,0, 0,0,0,1,1,1,1,1, 1,1,1,0,0,0,0,0, 0,0,0,0,0,0,0,0,
          0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
-         1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
-         1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
-         1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
-         1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
-         1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
-         1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
          0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
-
          0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
-         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
-         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
-         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
-         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
-         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
-         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
-
+         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 
+         
+         // Cigla
          0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
          1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
          1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
@@ -86,7 +69,26 @@ namespace oblutkostein_3D
          0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
          0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
          0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
-         //Window
+
+         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+         1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
+         1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
+         1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
+         1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
+         1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
+         1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
+         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+
+         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
+         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
+         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
+         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
+         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
+         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
+         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
+         
+         //Prozor
          1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 
          1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,  
          1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,  
@@ -122,7 +124,8 @@ namespace oblutkostein_3D
          1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
          1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 
          1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 
-         //Door
+         
+         //Vrata
          0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,  
          0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,  
          0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,    
@@ -160,37 +163,6 @@ namespace oblutkostein_3D
          0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,         
         };
 
-        SolidBrush cetkaMiniMap = new SolidBrush(Color.Yellow);
-        Pen olovkaDirection = new Pen(Color.Orange);
-        Pen olovkaZid = new Pen(Color.Red, 8);
-
-        double playerX = 300, playerY = 300;
-
-        double rotationSpeed = 7.0;
-        double speed = 155.0;
-
-        // Igrac delta X, igrac delta Y (X i Y koraci igraca za odredjeni ugao), igrac Ugao (ugao u radijanima pod kojim igrac gleda)
-        double playerdX, playerdY, playerA = 0.0;
-
-        //Ray casting
-        //X i Y koordinate na mapi, pozicija na mapi (map index), broj koraka koje ray pravi dok ne udari u zid
-        int mx, my, mp, dof;
-        //Trenutna X i Y pozicija vrha ray-a, ugao pod kojim ray putuje, offset/korak za koji se ray pomjera do sljedece minimap linije
-        //te finalna udaljenost do najblizeg zida
-        double rx, ry, ra, xoff, yoff, disT;
-
-        //Stoperica koja pocinje brojati od nule cim je pokrenemo sa stopwatch.Start() - ekvivalentno milis u arduinu...
-        Stopwatch stopwatch = new Stopwatch();
-
-        //Pamti tacan trenutak kada se zavrsio prethodni frame
-        //Uzima podatak iz stopwatch-a o tome koliko je tacno proslo od pokretanja programa do ovog trenutka
-        //Izracunava koliko je vremena proteklo između dva frame-a
-        double lastTime = 0, currentTime, deltaTime;
-
-        bool goUp, goDown, goLeft, goRight;
-
-        int mapX = 8, mapY = 8, mapS = 64;
-
         int[] mapW = 
         {
             1, 1, 1, 2, 1, 2, 1, 2,
@@ -227,29 +199,85 @@ namespace oblutkostein_3D
             1, 1, 1, 1, 1, 1, 1, 1,
         };
 
+        int mapX = 8, mapY = 8, mapS = 64;
+        int xo, yo; // X i Y offset - dimenzije zidova
+
+        double playerX = 300, playerY = 300;
+        int centerX, centerY;
+
+        bool goUp, goDown, goLeft, goRight;
+
+        double rotationSpeed = 7.0;
+        double speed = 155.0;
+
+        double playerdX, playerdY, playerA = 0.0;
+
+        Stopwatch stopwatch = new Stopwatch();
+        double lastTime = 0, currentTime, deltaTime;
+
+        Graphics g;
+        SolidBrush cetkaMiniMap = new SolidBrush(Color.Yellow);
+        Pen olovkaDirection = new Pen(Color.Orange);
+        Pen olovkaZid = new Pen(Color.Red, 8);
+
+        //Ray casting
+        //X i Y koordinate na mapi, pozicija na mapi (map index), broj koraka koje ray pravi dok ne udari u zid
+        int mx, my, mp, dof;
+        //Trenutna X i Y pozicija vrha ray-a, ugao pod kojim ray putuje, offset/korak za koji se ray pomjera do sljedece minimap linije, te finalna udaljenost do najblizeg zida
+        double rx, ry, ra, xoff, yoff, disT;
+        double disH, hx, hy, aTan;
+        double disV, vx, vy, nTan;
+
+        double lineH, lineH_full, lineOff;
+
+        int vmt = 0, hmt = 0;
+        int hitWallType = 0;
+        double shade = 1.0;
+
+        double ty;
+        double tx;
+
+        double ty_step;
+        double ty_off;
+
+        int texOffset;
+
+        int ty_idx, tx_idx;
+
+
+        double dy, deg, raFix;
+
+
+        int pixelColor, bojaVal;
+
+        // "Fish-eye" effect fix
+        double ca;
+
+        int y;
+
+        int ipx, ipx_add_xo, ipx_sub_xo;
+        int ipy, ipy_add_yo, ipy_sub_yo;
+
+
         public Form1()
         {
             InitializeComponent();
 
-            // Sprecava treperenje tako sto prvo iscrta sve u memoriji, pa onda prikaze gotovu sliku (bez crtanja jednog po jednog elementa)
-            this.DoubleBuffered = true;
-
-            //Client size ne racuna title forme sto nam odgovara, za razliku od Size (512 + 1 zbog praznog mjesta na dnu minimape)
             this.ClientSize = new Size(1024, 513);
 
+            this.DoubleBuffered = true;
+
             stopwatch.Start();
-            //Cim se zavrse sve druge naredbe i program bude u tzv. "Wait state-u" (Idle), pokrece se GameLoop funkcija 
-            //Dakle ovim se izvlaci maksimum iz samog procesora racunara na kojem se pokrece igra
+
             Application.Idle += GameLoop;
 
-            //Prvo racunanje deltaX i deltaY za pocetni ugao
             playerdX = Math.Cos(playerA);
             playerdY = Math.Sin(playerA);
         }
 
-        double degToRad(double a) { return a * Math.PI / 180.0; }
+        //double degToRad(double a) { return a * Math.PI / 180.0; }
 
-        double FixAng(double a) { if (a > 360) { a -= 360; } if (a < 0) { a += 360; } return a; }
+        //double FixAng(double a) { if (a > 360) { a -= 360; } if (a < 0) { a += 360; } return a; }
 
         private double distance(double ax, double ay, double bx, double by, double ang)
         {
@@ -258,16 +286,13 @@ namespace oblutkostein_3D
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            Graphics g = e.Graphics;
+            g = e.Graphics;
 
-            int xo, yo; // X i Y offset - dimenzije zidova
-
-            //Nacrtaj minimapu
-            for (int y = 0; y < mapY; y++)
+            //-----CRTANJE MINIMAPE-----//
+            for (y = 0; y < mapY; y++)
             {
                 for (int x = 0; x < mapX; x++)
                 {
-                    //Zbog memorijske produktivnosti umjesto 2D niza koristili smo 1D niz i pristupali elementima kao da je 2D niz preko formule: map[y * mapX + x]
                     if (mapW[y * mapX + x] > 0) { cetkaMiniMap.Color = Color.White; } else { cetkaMiniMap.Color = Color.Black; }
                     xo = x * mapS;
                     yo = y * mapS;
@@ -281,43 +306,39 @@ namespace oblutkostein_3D
             g.FillEllipse(cetkaMiniMap, (int)playerX, (int)playerY, 8, 8);
 
             //Nacrtaj liniju direkcije igraca na minimapi
-            //centerX i centerY predstavljaju koordinate sredine naseg igraca na minimapi (odakle krece linija direkcije)
-            int centerX = (int)playerX + 4;
-            int centerY = (int)playerY + 4;
-            // Mnozimo deltaX i deltaY sa 5 da dobijemo zeljenu duzinu linije direkcije
+            centerX = (int)playerX + 4;
+            centerY = (int)playerY + 4;
             g.DrawLine(olovkaDirection, centerX, centerY, (int)(centerX + playerdX * 5), (int)(centerY + playerdY * 5));
 
-            //Nacrtaj ray
+
+            //-----RAY CASTING-----
             ra = playerA - 0.0174533 * 30;
             if (ra < 0) ra += 2 * Math.PI;
             if (ra > 2 * Math.PI) ra -= 2 * Math.PI;
 
-            for (int r = 0; r < 60; r++)
+            for (int r = 0; r < 120; r++)
             {
-                int vmt = 0;
-                int hmt = 0;
+                vmt = 0;
+                hmt = 0;
 
-                //Provjeri horizontalne linije
+                //HORIZONTALNA PROVJERA
                 dof = 0;
-                //Udaljenost od igraca do tacke gdje ray udara prvi horizontalni zid (na pocetku je 1000000 jer jos ne znamo gdje je zid)
-                //X i Y koordinate gdje je ray udario horizontalni zid
-                double disH = 1000000, hx = playerX, hy = playerY;
+                disH = 1000000;
+                hx = playerX;
+                hy = playerY;
+                aTan = -1.0 / Math.Tan(ra);
 
-                double aTan = -1.0 / Math.Tan(ra);
-
-                //Igrac gleda gore
+                //Igrac gleda dole
                 if (ra > Math.PI)
                 {
-                    //Pomocu trigonometrijske funkcije tangens pronalazimo koordinate najblize horizontalne linije, te X i Y korake do sljedece horizontalne linije
                     ry = ((int)(playerY / 64) * 64) - 0.0001;
                     rx = (playerY - ry) * aTan + playerX;
                     yoff = -64;
                     xoff = -yoff * aTan;
                 }
-                //Igrac gleda dole
+                //Igrac gleda gore
                 if (ra < Math.PI)
                 {
-                    //Pomocu trigonometrijske funkcije tangens pronalazimo koordinate najblize horizontalne linije, te X i Y korake do sljedece horizontalne linije
                     ry = ((int)(playerY / 64) * 64) + 64;
                     rx = (playerY - ry) * aTan + playerX;
                     yoff = 64;
@@ -332,43 +353,38 @@ namespace oblutkostein_3D
                 }
                 while (dof < 8)
                 {
-                    mx = (int)(rx / 64); // Dijelimo sa 64 da dobijemo kolonu 
-                    my = (int)(ry / 64); // Dijelimo sa 64 da dobijemo red
-                    mp = my * mapX + mx; // Pretvaramo 2D (red, kolona) u indeks za 1D niz map[]
+                    mx = (int)(rx / 64);
+                    my = (int)(ry / 64);
+                    mp = my * mapX + mx;
 
                     if (mp > 0 && mp < mapX * mapY && mapW[mp] > 0) //Provjera da li je pogodjen horizontalni zid
                     {
                         hmt = mapW[mp];
-                        //Pohranjujemo podatke o X i Y poziciji gdje je horizontalni zid pogodjen,
-                        //te pomocu pitagorine teoreme izracunavamo udaljenost ray-a od igraca do tog pogodjenog horizontalnog zida
+
                         hx = rx;
                         hy = ry;
                         disH = distance(playerX, playerY, hx, hy, ra);
-                        dof = 8; // Ray pogodio horizontalni zid - prekini provjeru za taj ray
+                        dof = 8;
 
                     }
                     else
                     {
-                        // Sljedeca horizontalna linija...
                         rx += xoff;
                         ry += yoff;
                         dof++;
                     }
                 }
 
-                //Provjeri vertikalne linije
+                //VERTIKALNA PROVJERA
                 dof = 0;
-                //Udaljenost od igraca do tacke gdje ray udara prvi vertikalni zid (na pocetku je 1000000 jer jos ne znamo gdje je zid)
-                //X i Y koordinate gdje je ray udario vertikalni zid
-                double disV = 1000000, vx = playerX, vy = playerY;
-
-                double nTan = -Math.Tan(ra);
+                disV = 1000000;
+                vx = playerX;
+                vy = playerY;
+                nTan = -Math.Tan(ra);
 
                 //Igrac gleda lijevo
                 if (ra > Math.PI / 2 && ra < 3 * Math.PI / 2)
                 {
-                    //Pomocu trigonometrijske funkcije negativni tangens pronalazimo koordinate najblize vertikalne linije,
-                    //te X i Y korake do sljedece vertikalne linije
                     rx = ((int)(playerX / 64) * 64) - 0.0001;
                     ry = (playerX - rx) * nTan + playerY;
                     xoff = -64;
@@ -377,14 +393,12 @@ namespace oblutkostein_3D
                 //Igrac gleda desno
                 if (ra < Math.PI / 2 || ra > 3 * Math.PI / 2)
                 {
-                    //Pomocu trigonometrijske funkcije negativni tangens pronalazimo koordinate najblize vertikalne linije,
-                    //te X i Y korake do sljedece vertikalne linije
                     rx = ((int)(playerX / 64) * 64) + 64;
                     ry = (playerX - rx) * nTan + playerY;
                     xoff = 64;
                     yoff = -xoff * nTan;
                 }
-                //Igrac gleda gore ili dolje
+                //Igrac gleda ravno dole ili ravno gore (ray nikada ne pogadja vertikalnu liniju)
                 if (ra == 0 || ra == Math.PI)
                 {
                     rx = playerX;
@@ -393,32 +407,29 @@ namespace oblutkostein_3D
                 }
                 while (dof < 8)
                 {
-                    mx = (int)(rx / 64); // Dijelimo sa 64 da dobijemo kolonu 
-                    my = (int)(ry / 64); // Dijelimo sa 64 da dobijemo red
-                    mp = my * mapX + mx; // Pretvaramo 2D (red, kolona) u indeks za 1D niz map[]
+                    mx = (int)(rx / 64);
+                    my = (int)(ry / 64);
+                    mp = my * mapX + mx;
 
                     if (mp > 0 && mp < mapX * mapY && mapW[mp] > 0) //Provjera da li je pogodjen vertikalni zid
                     {
                         vmt = mapW[mp];
-                        //Pohranjujemo podatke o X i Y poziciji gdje je vertikalni zid pogodjen,
-                        //te pomocu pitagorine teoreme izracunavamo udaljenost ray-a od igraca do tog pogodjenog vertikalnog zida
+
                         vx = rx;
                         vy = ry;
                         disV = distance(playerX, playerY, vx, vy, ra);
-                        dof = 8; // Ray pogodio vertikalni zid - prekini provjeru za taj ray
+                        dof = 8;
                     }
                     else
                     {
-                        // Sljedeca vertikalna linija...
                         rx += xoff;
                         ry += yoff;
                         dof++;
                     }
                 }
-                //PROBLEMI
 
-                double shade = 1.0;
-                int hitWallType = 0;
+                shade = 1.0;
+                hitWallType = 0;
 
                 if (disV < disH) // Pogodjen prvo vertikalni zid
                 {
@@ -437,41 +448,34 @@ namespace oblutkostein_3D
                     hitWallType = hmt;
                     olovkaZid.Color = Color.FromArgb(178, 0, 0);
                 }
+
+                //NACRTAJ RAY
                 olovkaDirection.Color = Color.Red;
                 g.DrawLine(olovkaDirection, (int)centerX, (int)centerY, (int)rx, (int)ry);
 
-                // Popravljanje "fish-eye" efekta
-                double ca = playerA - ra;
+                //-----FISH-EYE EFFECT FIX-----
+                ca = playerA - ra;
                 if (ca < 0) ca += 2 * Math.PI;
                 if (ca > 2 * Math.PI) ca -= 2 * Math.PI;
                 disT = disT * Math.Cos(ca);
-
                 if (disT < 0.1) disT = 0.1;
 
-                //Nacrtaj 3D zidove
-                double lineH = (mapS * 320) / disT;
-                double lineH_full = lineH;
-                double lineOff = 160 - lineH / 2;
+                //-----CRTANJE ZIDOVA-----
+                lineH = (mapS * 320) / disT;
+                lineH_full = lineH;
+                lineOff = 160 - lineH / 2;
                 if (lineH > 320) lineH = 320;
                 if (lineOff < 0) lineOff = 0;
 
-                //Odredjujemo koliko koraka u teksturi pravimo za svaki piksel na ekranu
-                double ty_step = 32.0 / lineH_full;
-                //Sluzi za vertikalno centriranje teksture kada je zid visi od ekrana ako je igrac preblizu, izracunavamo koliko redova teksture treba "odsjeći" 
-                //sa vrha i dna kako bi sredina teksture ostala vidljiva na ekranu.
-                double ty_off = 0.0;
+                ty_step = 32.0 / lineH_full;
+                ty_off = 0.0;
 
                 if (lineH_full > 320)
                 {
-                    // Ako je zid visi od ekrana, izracunaj koliko teksture treba preskociti (offset)
                     ty_off = (lineH_full - 320.0) / 2.0;
                 }
 
-                int y;
-
-                //Pocetna Y pozicija u teksturi
-                double ty = ty_off * ty_step;
-                double tx;
+                ty = ty_off * ty_step;
 
                 if (shade == 1)
                 {
@@ -484,16 +488,16 @@ namespace oblutkostein_3D
                     if (ra > Math.PI / 2 && ra < 3 * Math.PI / 2) tx = 31 - tx;
                 }
 
-                int texOffset = (hitWallType - 1) * 1024;
+                texOffset = (hitWallType - 1) * 1024;
                 if (texOffset < 0) texOffset = 0;
 
                 for (y = 0; y < lineH; y++)
                 {
-                    int ty_idx = (int)ty & 31;
-                    int tx_idx = (int)tx & 31;
+                    ty_idx = (int)ty & 31;
+                    tx_idx = (int)tx & 31;
 
-                    int pixelColor = allTextures[texOffset + (ty_idx * 32 + tx_idx)];
-                    int bojaVal = (int)((pixelColor * 255) * shade);
+                    pixelColor = allTextures[texOffset + (ty_idx * 32 + tx_idx)];
+                    bojaVal = (int)((pixelColor * 255) * shade);
 
                     if (hitWallType == 1) { olovkaZid.Color = Color.FromArgb(bojaVal, bojaVal / 2, bojaVal / 2); }
                     if (hitWallType == 2) { olovkaZid.Color = Color.FromArgb(bojaVal, bojaVal, bojaVal / 2); }
@@ -505,25 +509,25 @@ namespace oblutkostein_3D
                     ty += ty_step;
                 }
 
-                //Nacrtaj pod
+                //-----CRTANJE PODA-----
                 for (y = (int)(lineOff + lineH); y < 320; y++)
                 {
-                    double dy = y - (320 / 2.0);
-                    double deg = ra;
-                    double raFix = Math.Cos(playerA - ra);
+                    dy = y - (320 / 2.0);
+                    deg = ra;
+                    raFix = Math.Cos(playerA - ra);
 
                     tx = playerX / 2 + Math.Cos(deg) * 158 * 32 / dy / raFix;
                     ty = playerY / 2 + Math.Sin(deg) * 158 * 32 / dy / raFix;
 
-                    int mp = mapF[(int)(ty / 32.0) * mapX + (int)(tx / 32.0)] * 32 * 32;
+                    mp = mapF[(int)(ty / 32.0) * mapX + (int)(tx / 32.0)] * 32 * 32;
 
-                    int pixelColor = (int)(allTextures[((int)(ty)&31)*32 + ((int)(tx)&31)+mp]) * 255;
+                    pixelColor = (int)(allTextures[((int)(ty)&31)*32 + ((int)(tx)&31)+mp]) * 255;
                     olovkaZid.Color = Color.FromArgb((int)(pixelColor/1.3), (int)(pixelColor/1.3), pixelColor);
 
                     g.DrawLine(olovkaZid, (int)(r * 8 + 530), (int)y, (int)(r * 8 + 530), (int)y + 1);
 
 
-                    //Nacrtaj krov
+                    //-----CRTANJE KROVA-----
                     mp = mapC[(int)(ty / 32.0) * mapX + (int)(tx / 32.0)] * 32 * 32;
 
                     pixelColor = (int)(allTextures[((int)(ty) & 31) * 32 + ((int)(tx) & 31) + mp]) * 255;
@@ -532,7 +536,7 @@ namespace oblutkostein_3D
                     g.DrawLine(olovkaZid, (int)(r * 8 + 530), (int)320 - y, (int)(r * 8 + 530), (int)320 - y + 1);
                 }
 
-                    ra += 0.0174533;
+                ra += 0.0174533;
                 if (ra < 0) ra += 2 * Math.PI;
                 if (ra > 2 * Math.PI) ra -= 2 * Math.PI;
             }
@@ -541,15 +545,12 @@ namespace oblutkostein_3D
 
         private void GameLoop(object sender, EventArgs e)
         {
-            //Uvodjenjem ovih varijabli rjesavamo problem veceg i manjeg FPS-a, da se igrac koji ima bolje performanse racunara ne bi kretao brze u odnosu na
-            //onog koji ima losije, uvodimo deltaTime koji ce za veci FPS biti znatno manji nego za manji FPS, pa ce se oba igraca kretati jednakom brzinom
             currentTime = stopwatch.Elapsed.TotalSeconds;
             deltaTime = currentTime - lastTime;
             lastTime = currentTime;
 
             UpdateGame(deltaTime);
 
-            // Proglasava trenutnu sliku starom i ponovo poziva dogadjaj Paint
             this.Invalidate();
         }
 
@@ -558,40 +559,34 @@ namespace oblutkostein_3D
 
             if (!(goUp && goDown))
             {
-                //Rjesavamo problem prolazenja igraca kroz zidove tako sto provjeravamo da li je zid ispred ili iza njega za odredjenu vrijednost offseta
-                //Uvodimo dvije offset vrijednosti jer se kolizija moze desiti i sa horizontalnim i sa vertikalnim zidom
-                int xo = 0;
-                int yo = 0;
+                xo = 0;
+                yo = 0;
 
-                //Ako se igrac krece udesno (playerdX > 0) provjerava se vertikalni zid cija je X pozicija za 20 veca od pozicije igraca
-                //Ako se igrac krece ulijevo (playerdX < 0) provjerava se vertikalni zid cija je X pozicija za 20 manja od pozicije igraca
                 if (playerdX < 0) { xo = -20; } else { xo = 20; }
-
-                //Ako se igrac krece prema gore (playerdY < 0) provjerava se horizontalni zid cija je Y pozicija za 20 manja od pozicije igraca
-                //Ako se igrac krece prema dole (playerdY > 0) provjerava se horizontalni zid cija je Y pozicija za 20 veca od pozicije igraca
                 if (playerdY < 0) { yo = -20; } else { yo = 20; }
 
-                int ipx = (int)(playerX / 64.0); // Trenutna kolona na kojoj se nalazi igrac
-                int ipx_add_xo = (int)((playerX + xo) / 64.0); // Kolona ispred igraca (pri kretanju naprijed / lijevo-desno)
-                int ipx_sub_xo = (int)((playerX - xo) / 64.0); // Kolona iza igraca (pri kretanju nazad / lijevo-desno)
+                ipx = (int)(playerX / 64.0);
+                ipx_add_xo = (int)((playerX + xo) / 64.0);
+                ipx_sub_xo = (int)((playerX - xo) / 64.0);
 
-                int ipy = (int)(playerY / 64.0); // Trenutni red u kojem se nalazi igrac
-                int ipy_add_yo = (int)((playerY + yo) / 64.0); // Red ispred igraca (pri kretanju naprijed / gore-dole)
-                int ipy_sub_yo = (int)((playerY - yo) / 64.0); // Red iza igraca (pri kretanju nazad / gore-dole)
+                ipy = (int)(playerY / 64.0);
+                ipy_add_yo = (int)((playerY + yo) / 64.0);
+                ipy_sub_yo = (int)((playerY - yo) / 64.0);
 
                 if (goUp)
                 {
                     if (mapW[ipy * mapX + ipx_add_xo] == 0) { playerX += playerdX * speed * dt; } //Sudar sa vertikalnim zidom - kretanje naprijed
                     if (mapW[ipy_add_yo * mapX + ipx] == 0) { playerY += playerdY * speed * dt; } //Sudar sa horizontalnim zidom - kretanje naprijed
+                    if (mapW[(int)(playerY / 64.0) * mapX + (int)(playerX / 64.0)] != 0) { playerX -= playerdX * speed * dt; playerY -= playerdY * speed * dt; } //Sudar dijagonalno - kretanje naprijed
                 }
                 if (goDown)
                 {
                     if (mapW[ipy * mapX + ipx_sub_xo] == 0) { playerX -= playerdX * speed * dt; } // Sudar sa vertikalnim zidom - kretanje nazad
                     if (mapW[ipy_sub_yo * mapX + ipx] == 0) { playerY -= playerdY * speed * dt; } // Sudar sa horizontalnim zidom - kretanje nazad
+                    if (mapW[(int)(playerY / 64.0) * mapX + (int)(playerX / 64.0)] != 0) { playerX += playerdX * speed * dt; playerY += playerdY * speed * dt; } // Sudar dijagonalno - kretanje nazad
                 }
             }
-            //Za kretanje igraca naprijed/nazad ne dodajemo vise fiksan korak zato sto igrac ne mora gledati pod uglom od 90 stepeni
-            //Zato racunamo korake deltaX i deltaY koji se racunaju u zavisnosti od ugla pod kojim igrac gleda (u radijanima)
+            
             if (!(goLeft && goRight))
             {
                 if (goLeft)
@@ -620,16 +615,16 @@ namespace oblutkostein_3D
             if (e.KeyCode == Keys.D) goRight = true;
             if (e.KeyCode == Keys.E)
             {
-                int xo = 0;
+                xo = 0;
                 if (playerdX < 0) { xo = -25; } else { xo = 25; }
-                int yo = 0;
+                yo = 0;
                 if (playerdY < 0) { yo = -25; } else { yo = 25; }
 
-                int ipx = (int)(playerX / 64.0); // Trenutna kolona na kojoj se nalazi igrac
-                int ipx_add_xo = (int)((playerX + xo) / 64.0); // Kolona ispred igraca (pri kretanju naprijed / lijevo-desno)
+                ipx = (int)(playerX / 64.0);
+                ipx_add_xo = (int)((playerX + xo) / 64.0);
 
-                int ipy = (int)(playerY / 64.0); // Trenutni red u kojem se nalazi igrac
-                int ipy_add_yo = (int)((playerY + yo) / 64.0); // Red ispred igraca (pri kretanju naprijed / gore-dole)
+                ipy = (int)(playerY / 64.0);
+                ipy_add_yo = (int)((playerY + yo) / 64.0);
                 if (mapW[ipy_add_yo * mapX + ipx_add_xo] == 4) { mapW[ipy_add_yo * mapX + ipx_add_xo] = 0; }
             }
         }
