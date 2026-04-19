@@ -1,0 +1,8 @@
+C:\Users\Korisnik\Desktop\OBLUTKOSTEIN 3D\oblutkostein 3D\oblutkostein 3D\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Korisnik\Desktop\OBLUTKOSTEIN 3D\oblutkostein 3D\oblutkostein 3D\obj\Debug\oblutkostein_3D.Form1.resources
+C:\Users\Korisnik\Desktop\OBLUTKOSTEIN 3D\oblutkostein 3D\oblutkostein 3D\obj\Debug\oblutkostein_3D.Properties.Resources.resources
+C:\Users\Korisnik\Desktop\OBLUTKOSTEIN 3D\oblutkostein 3D\oblutkostein 3D\obj\Debug\oblutkostein 3D.csproj.GenerateResource.Cache
+C:\Users\Korisnik\Desktop\OBLUTKOSTEIN 3D\oblutkostein 3D\oblutkostein 3D\bin\Debug\oblutkostein 3D.exe
+C:\Users\Korisnik\Desktop\OBLUTKOSTEIN 3D\oblutkostein 3D\oblutkostein 3D\bin\Debug\oblutkostein 3D.pdb
+C:\Users\Korisnik\Desktop\OBLUTKOSTEIN 3D\oblutkostein 3D\oblutkostein 3D\obj\Debug\oblutkostein 3D.exe
+C:\Users\Korisnik\Desktop\OBLUTKOSTEIN 3D\oblutkostein 3D\oblutkostein 3D\obj\Debug\oblutkostein 3D.pdb
