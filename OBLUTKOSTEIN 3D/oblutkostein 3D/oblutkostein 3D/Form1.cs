@@ -1,4 +1,4 @@
-﻿﻿﻿﻿using System;
+﻿﻿﻿﻿﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -165,14 +165,14 @@ namespace oblutkostein_3D
 
         int[] mapW = 
         {
-            1, 1, 1, 2, 1, 2, 1, 2,
-            1, 0, 0, 2, 0, 0, 0, 1,
-            1, 0, 0, 4, 0, 2, 0, 2,
-            1, 2, 4, 2, 0, 0, 0, 1,
-            3, 0, 0, 0, 0, 0, 0, 2,
-            1, 0, 0, 0, 0, 1, 0, 1,
-            1, 0, 0, 0, 0, 0, 0, 2,
-            1, 1, 1, 1, 1, 1, 1, 2,
+            3, 3, 3, 3, 3, 3, 3, 3,
+            3, 0, 0, 3, 0, 0, 0, 3,
+            3, 0, 0, 4, 0, 3, 0, 3,
+            3, 3, 4, 3, 0, 0, 0, 3,
+            3, 0, 0, 0, 0, 0, 0, 3,
+            3, 0, 0, 0, 0, 3, 0, 3,
+            3, 0, 0, 0, 0, 0, 0, 3,
+            3, 3, 3, 3, 3, 3, 3, 3,
         };
 
         int[] mapF = 
@@ -207,8 +207,8 @@ namespace oblutkostein_3D
 
         bool goUp, goDown, goLeft, goRight;
 
-        double rotationSpeed = 7.0;
-        double speed = 155.0;
+        double rotationSpeed = 4.0;
+        double speed = 100.0;
 
         double playerdX, playerdY, playerA = 0.0;
 
@@ -258,6 +258,10 @@ namespace oblutkostein_3D
         int ipx, ipx_add_xo, ipx_sub_xo;
         int ipy, ipy_add_yo, ipy_sub_yo;
 
+        int viewWidth = 512;
+        int numRays = 512;
+        double fov = 60 * (Math.PI / 180.0);
+        double screenX;
 
         public Form1()
         {
@@ -312,11 +316,13 @@ namespace oblutkostein_3D
 
 
             //-----RAY CASTING-----
-            ra = playerA - 0.0174533 * 30;
+            ra = playerA - (fov/2.0);
             if (ra < 0) ra += 2 * Math.PI;
             if (ra > 2 * Math.PI) ra -= 2 * Math.PI;
 
-            for (int r = 0; r < 120; r++)
+            g.FillRectangle(Brushes.DarkSlateBlue, 530, 0, 512, 160);
+            g.FillRectangle(Brushes.Black, 530, 160, 512, 160);
+            for (int r = 0; r < numRays; r++)
             {
                 vmt = 0;
                 hmt = 0;
@@ -491,6 +497,9 @@ namespace oblutkostein_3D
                 texOffset = (hitWallType - 1) * 1024;
                 if (texOffset < 0) texOffset = 0;
 
+                screenX = 530 + (r * (double)(viewWidth / numRays));
+                olovkaZid.Width = (int)(viewWidth / numRays);
+
                 for (y = 0; y < lineH; y++)
                 {
                     ty_idx = (int)ty & 31;
@@ -504,11 +513,11 @@ namespace oblutkostein_3D
                     if (hitWallType == 3) { olovkaZid.Color = Color.FromArgb(bojaVal / 2, bojaVal / 2, bojaVal); }
                     if (hitWallType == 4) { olovkaZid.Color = Color.FromArgb(bojaVal / 2, bojaVal, bojaVal / 2); }
 
-                    g.DrawLine(olovkaZid, (int)(r * 8 + 530), (int)lineOff + y, (int)(r * 8 + 530), (int)lineOff + y + 1);
+                    g.DrawLine(olovkaZid, (int)screenX, (int)lineOff + y, (int)(screenX), (int)lineOff + y + 1);
 
                     ty += ty_step;
                 }
-
+                /*
                 //-----CRTANJE PODA-----
                 for (y = (int)(lineOff + lineH); y < 320; y++)
                 {
@@ -521,22 +530,22 @@ namespace oblutkostein_3D
 
                     mp = mapF[(int)(ty / 32.0) * mapX + (int)(tx / 32.0)] * 32 * 32;
 
-                    pixelColor = (int)(allTextures[((int)(ty)&31)*32 + ((int)(tx)&31)+mp]) * 255;
-                    olovkaZid.Color = Color.FromArgb((int)(pixelColor/1.3), (int)(pixelColor/1.3), pixelColor);
+                    pixelColor = (int)(allTextures[((int)(ty) & 31) * 32 + ((int)(tx) & 31) + mp]) * 255;
+                    olovkaZid.Color = Color.FromArgb((int)(pixelColor / 1.3), (int)(pixelColor / 1.3), pixelColor);
 
-                    g.DrawLine(olovkaZid, (int)(r * 8 + 530), (int)y, (int)(r * 8 + 530), (int)y + 1);
+                    g.DrawLine(olovkaZid, (int)(screenX), (int)y, (int)(screenX), (int)y + 1);
 
 
                     //-----CRTANJE KROVA-----
                     mp = mapC[(int)(ty / 32.0) * mapX + (int)(tx / 32.0)] * 32 * 32;
 
                     pixelColor = (int)(allTextures[((int)(ty) & 31) * 32 + ((int)(tx) & 31) + mp]) * 255;
-                    olovkaZid.Color = Color.FromArgb((int)(pixelColor/2.0), (int)(pixelColor/1.2), (int)(pixelColor/2.0));
+                    olovkaZid.Color = Color.FromArgb((int)(pixelColor / 2.0), (int)(pixelColor / 1.2), (int)(pixelColor / 2.0));
 
-                    g.DrawLine(olovkaZid, (int)(r * 8 + 530), (int)320 - y, (int)(r * 8 + 530), (int)320 - y + 1);
+                    g.DrawLine(olovkaZid, (int)(screenX), (int)320 - y, (int)(screenX), (int)320 - y + 1);
                 }
-
-                ra += 0.0174533;
+                */
+                ra += fov / numRays;
                 if (ra < 0) ra += 2 * Math.PI;
                 if (ra > 2 * Math.PI) ra -= 2 * Math.PI;
             }
@@ -586,7 +595,7 @@ namespace oblutkostein_3D
                     if (mapW[(int)(playerY / 64.0) * mapX + (int)(playerX / 64.0)] != 0) { playerX += playerdX * speed * dt; playerY += playerdY * speed * dt; } // Sudar dijagonalno - kretanje nazad
                 }
             }
-            
+
             if (!(goLeft && goRight))
             {
                 if (goLeft)
