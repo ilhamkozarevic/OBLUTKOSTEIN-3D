@@ -12,165 +12,15 @@ namespace oblutkostein_3D
 {
     public partial class Form1 : Form
     {
-        int[] allTextures =               //sve 32x32 teksture
-        {
-         // Oblutak
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,1,1,1, 1,1,1,0,0,0,0,0, 0,0,0,0,0,0,0,0,
-         0,0,0,0,0,0,0,0, 0,0,1,1,1,1,1,1, 1,1,1,1,1,1,0,0, 0,0,0,0,0,0,0,0,
-         0,0,0,0,0,0,0,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0,
-         0,0,0,0,0,0,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,0,0,0,0,0,0,0,
-         0,0,0,0,0,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,0,0,0,0,0,0,
-         0,0,0,0,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,0,0,0,0,0,
-         0,0,0,0,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,0,0,0,0,0,
-         0,0,0,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,0,0,0,0,
-
-         0,0,0,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,0,0,0,0,
-         0,0,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,0,0,0,
-         0,0,1,1,1,1,0,0, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,0,0, 1,1,1,1,1,0,0,0,
-         0,0,1,1,1,0,0,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,0,0,0, 0,1,1,1,1,0,0,0,
-         0,0,1,1,1,0,0,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,0,0,0, 0,1,1,1,1,0,0,0,
-         0,0,1,1,1,1,0,0, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,0,0, 1,1,1,1,1,0,0,0,
-         0,0,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,0,0,0,
-         0,0,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,0,0,0,
-
-         0,0,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,0,0,0,
-         0,0,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,0,0,0,
-         0,0,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,0,0,0,
-         0,0,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,0,0,0,
-         0,0,0,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,0,0,0,0,
-         0,0,0,1,1,1,1,1, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,0,1, 1,1,1,1,0,0,0,0,
-         0,0,0,0,1,1,1,1, 1,0,1,1,1,1,1,1, 1,1,1,1,1,0,1,1, 1,1,1,0,0,0,0,0,
-         0,0,0,0,0,1,1,1, 1,1,0,0,0,0,0,0, 0,0,0,0,0,1,1,1, 1,0,0,0,0,0,0,0,
-
-         0,0,0,0,0,0,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,0,0,0,0,0,0,0,
-         0,0,0,0,0,0,0,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,0, 0,0,0,0,0,0,0,0,0,
-         0,0,0,0,0,0,0,0, 0,1,1,1,1,1,1,1, 1,1,1,1,0,0,0,0, 0,0,0,0,0,0,0,0,
-         0,0,0,0,0,0,0,0, 0,0,0,1,1,1,1,1, 1,1,1,0,0,0,0,0, 0,0,0,0,0,0,0,0,
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 
-         
-         // Cigla
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
-         1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
-         1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
-         1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
-         1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
-         1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
-         1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
-
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
-         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
-         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
-         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
-         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
-         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
-         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
-
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
-         1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
-         1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
-         1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
-         1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
-         1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
-         1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1,
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
-
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
-         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
-         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
-         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
-         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
-         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
-         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,
-         
-         //Prozor
-         1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,  
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,  
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,  
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,    
-               
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,  
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,  
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,  
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,  
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 
-         1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 
-
-         1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,  
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,  
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,  
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,  
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,   
-               
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,  
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,  
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,  
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,  
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,
-         1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 
-         1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 
-         
-         //Vrata
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,  
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,  
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,    
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,    
-         0,0,0,1,1,1,1,1, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 1,1,1,1,1,0,0,0,  
-         0,0,0,1,0,0,0,1, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 1,0,0,0,1,0,0,0,  
-         0,0,0,1,0,0,0,1, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 1,0,0,0,1,0,0,0,   
-         0,0,0,1,0,0,0,1, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 1,0,0,0,1,0,0,0,     
-
-         0,0,0,1,0,0,0,1, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 1,0,0,0,1,0,0,0,  
-         0,0,0,1,0,0,0,1, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 1,0,0,0,1,0,0,0,    
-         0,0,0,1,0,0,0,1, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 1,0,0,0,1,0,0,0,    
-         0,0,0,1,0,0,0,1, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 1,0,0,0,1,0,0,0,   
-         0,0,0,1,0,0,0,1, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 1,0,0,0,1,0,0,0,  
-         0,0,0,1,0,0,0,1, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 1,0,0,0,1,0,0,0,  
-         0,0,0,1,0,0,0,1, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 1,0,0,0,1,0,0,0,  
-         0,0,0,1,1,1,1,1, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 1,1,1,1,1,0,0,0,  
-
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,1,0,1, 1,0,1,0,0,0,0,0, 0,0,0,0,0,0,0,0,  
-         0,0,0,0,0,0,0,0, 0,0,1,1,1,1,0,1, 1,0,1,1,1,1,0,0, 0,0,0,0,0,0,0,0,   
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,    
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,    
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,  
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,  
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,   
-         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0, 
-         
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,  
-         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,     
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,   
-         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,   
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,   
-         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,  
-         0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1, 1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,   
-         0,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,0,         
-        };
 
         int[] mapW = 
         {
             3, 3, 3, 3, 3, 3, 3, 3,
             3, 0, 0, 3, 0, 0, 0, 3,
             3, 0, 0, 4, 0, 3, 0, 3,
-            3, 3, 4, 3, 0, 0, 0, 3,
+            3, 3, 4, 3, 0, 0, 0, 1,
             3, 0, 0, 0, 0, 0, 0, 3,
-            3, 0, 0, 0, 0, 3, 0, 3,
+            3, 0, 0, 0, 0, 3, 0, 2,
             3, 0, 0, 0, 0, 0, 0, 3,
             3, 3, 3, 3, 3, 3, 3, 3,
         };
@@ -219,6 +69,7 @@ namespace oblutkostein_3D
         SolidBrush cetkaMiniMap = new SolidBrush(Color.Yellow);
         Pen olovkaDirection = new Pen(Color.Orange);
         Pen olovkaZid = new Pen(Color.Red, 8);
+        SolidBrush cetkaPodKrov = new SolidBrush(Color.Blue);
 
         //Ray casting
         //X i Y koordinate na mapi, pozicija na mapi (map index), broj koraka koje ray pravi dok ne udari u zid
@@ -248,8 +99,6 @@ namespace oblutkostein_3D
         double dy, deg, raFix;
 
 
-        int pixelColor, bojaVal;
-
         // "Fish-eye" effect fix
         double ca;
 
@@ -258,16 +107,31 @@ namespace oblutkostein_3D
         int ipx, ipx_add_xo, ipx_sub_xo;
         int ipy, ipy_add_yo, ipy_sub_yo;
 
-        int viewWidth = 512;
-        int numRays = 512;
+        int viewWidth = 1024;
+        int viewHeight = 512;
+        int numRays = 128;
         double fov = 60 * (Math.PI / 180.0);
         double screenX;
+
+        public struct sprite
+        {
+            public int type;     //key, enemy
+            public int state;    //on, off
+            public int map;      //texture to show
+            public int x, y, z;  //position
+        }
+
+        sprite[] sp = new sprite[4];
 
         public Form1()
         {
             InitializeComponent();
 
-            this.ClientSize = new Size(1024, 513);
+            this.Text = "Oblutkostein 3D";
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.ClientSize = new Size(viewWidth, viewHeight);
 
             this.DoubleBuffered = true;
 
@@ -277,6 +141,8 @@ namespace oblutkostein_3D
 
             playerdX = Math.Cos(playerA);
             playerdY = Math.Sin(playerA);
+
+            sp[0].type = 1; sp[0].state = 1; sp[0].map = 0; sp[0].x = 150; sp[0].y = 150; sp[0].z = 20; //sprite 1
         }
 
         //double degToRad(double a) { return a * Math.PI / 180.0; }
@@ -292,6 +158,7 @@ namespace oblutkostein_3D
         {
             g = e.Graphics;
 
+            /*
             //-----CRTANJE MINIMAPE-----//
             for (y = 0; y < mapY; y++)
             {
@@ -304,15 +171,18 @@ namespace oblutkostein_3D
                     g.FillRectangle(cetkaMiniMap, xo + 1, yo + 1, mapS - 1, mapS - 1);
                 }
             }
+            */
 
+            /*
             //Nacrtaj igraca na minimapi
             cetkaMiniMap.Color = Color.Yellow;
             g.FillEllipse(cetkaMiniMap, (int)playerX, (int)playerY, 8, 8);
+            */
 
             //Nacrtaj liniju direkcije igraca na minimapi
             centerX = (int)playerX + 4;
             centerY = (int)playerY + 4;
-            g.DrawLine(olovkaDirection, centerX, centerY, (int)(centerX + playerdX * 5), (int)(centerY + playerdY * 5));
+            //g.DrawLine(olovkaDirection, centerX, centerY, (int)(centerX + playerdX * 5), (int)(centerY + playerdY * 5));
 
 
             //-----RAY CASTING-----
@@ -320,13 +190,13 @@ namespace oblutkostein_3D
             if (ra < 0) ra += 2 * Math.PI;
             if (ra > 2 * Math.PI) ra -= 2 * Math.PI;
 
-            g.FillRectangle(Brushes.DarkSlateBlue, 530, 0, 512, 160);
-            g.FillRectangle(Brushes.Black, 530, 160, 512, 160);
+            g.FillRectangle(Brushes.DarkSlateBlue, 0, 0, ClientRectangle.Width, ClientRectangle.Height / 2);
+            g.FillRectangle(Brushes.Black, 0, ClientRectangle.Height / 2, ClientRectangle.Width, ClientRectangle.Height);
             for (int r = 0; r < numRays; r++)
             {
                 vmt = 0;
                 hmt = 0;
-
+                
                 //HORIZONTALNA PROVJERA
                 dof = 0;
                 disH = 1000000;
@@ -456,8 +326,8 @@ namespace oblutkostein_3D
                 }
 
                 //NACRTAJ RAY
-                olovkaDirection.Color = Color.Red;
-                g.DrawLine(olovkaDirection, (int)centerX, (int)centerY, (int)rx, (int)ry);
+                //olovkaDirection.Color = Color.Red;
+                //g.DrawLine(olovkaDirection, (int)centerX, (int)centerY, (int)rx, (int)ry);
 
                 //-----FISH-EYE EFFECT FIX-----
                 ca = playerA - ra;
@@ -467,18 +337,18 @@ namespace oblutkostein_3D
                 if (disT < 0.1) disT = 0.1;
 
                 //-----CRTANJE ZIDOVA-----
-                lineH = (mapS * 320) / disT;
+                lineH = (mapS * viewHeight) / disT;
                 lineH_full = lineH;
-                lineOff = 160 - lineH / 2;
-                if (lineH > 320) lineH = 320;
+                lineOff = (viewHeight / 2.0) - lineH / 2;
+                if (lineH > viewHeight) lineH = viewHeight;
                 if (lineOff < 0) lineOff = 0;
 
                 ty_step = 32.0 / lineH_full;
                 ty_off = 0.0;
 
-                if (lineH_full > 320)
+                if (lineH_full > viewHeight)
                 {
-                    ty_off = (lineH_full - 320.0) / 2.0;
+                    ty_off = (lineH_full - (double)viewHeight) / 2.0;
                 }
 
                 ty = ty_off * ty_step;
@@ -494,60 +364,106 @@ namespace oblutkostein_3D
                     if (ra > Math.PI / 2 && ra < 3 * Math.PI / 2) tx = 31 - tx;
                 }
 
-                texOffset = (hitWallType - 1) * 1024;
-                if (texOffset < 0) texOffset = 0;
+                screenX = r * (double)(viewWidth / numRays);
+                int rayWidth = (int)(viewWidth / numRays);
 
-                screenX = 530 + (r * (double)(viewWidth / numRays));
-                olovkaZid.Width = (int)(viewWidth / numRays);
+                texOffset = (hitWallType - 1) * 3072;
+                if (texOffset < 0) texOffset = 0;
 
                 for (y = 0; y < lineH; y++)
                 {
                     ty_idx = (int)ty & 31;
                     tx_idx = (int)tx & 31;
 
-                    pixelColor = allTextures[texOffset + (ty_idx * 32 + tx_idx)];
-                    bojaVal = (int)((pixelColor * 255) * shade);
+                    int pixel = texOffset + (ty_idx * 32 + tx_idx) * 3;
 
-                    if (hitWallType == 1) { olovkaZid.Color = Color.FromArgb(bojaVal, bojaVal / 2, bojaVal / 2); }
-                    if (hitWallType == 2) { olovkaZid.Color = Color.FromArgb(bojaVal, bojaVal, bojaVal / 2); }
-                    if (hitWallType == 3) { olovkaZid.Color = Color.FromArgb(bojaVal / 2, bojaVal / 2, bojaVal); }
-                    if (hitWallType == 4) { olovkaZid.Color = Color.FromArgb(bojaVal / 2, bojaVal, bojaVal / 2); }
+                    int red = (int)(Textures.AllTextures[pixel + 0] * shade);
+                    int green = (int)(Textures.AllTextures[pixel + 1] * shade);
+                    int blue = (int)(Textures.AllTextures[pixel + 2] * shade);
 
-                    g.DrawLine(olovkaZid, (int)screenX, (int)lineOff + y, (int)(screenX), (int)lineOff + y + 1);
+                    cetkaPodKrov.Color = Color.FromArgb(red, green, blue);
+                    g.FillRectangle(cetkaPodKrov, (int)screenX, (int)lineOff + y, rayWidth, 1);
 
                     ty += ty_step;
                 }
-                /*
-                //-----CRTANJE PODA-----
-                for (y = (int)(lineOff + lineH); y < 320; y++)
+
+                //-----CRTANJE PODA I KROVA-----
+                for (y = (int)(lineOff + lineH); y < viewHeight; y++)
                 {
-                    dy = y - (320 / 2.0);
+                    dy = y - (viewHeight / 2.0);
                     deg = ra;
                     raFix = Math.Cos(playerA - ra);
 
-                    tx = playerX / 2 + Math.Cos(deg) * 158 * 32 / dy / raFix;
-                    ty = playerY / 2 + Math.Sin(deg) * 158 * 32 / dy / raFix;
+                    tx = playerX / 2 + Math.Cos(deg) * (viewHeight / 2.0) * 32 / dy / raFix;
+                    ty = playerY / 2 + Math.Sin(deg) * (viewHeight / 2.0) * 32 / dy / raFix;
 
-                    mp = mapF[(int)(ty / 32.0) * mapX + (int)(tx / 32.0)] * 32 * 32;
+                    int tx_idx = (int)tx & 31;
+                    int ty_idx = (int)ty & 31;
 
-                    pixelColor = (int)(allTextures[((int)(ty) & 31) * 32 + ((int)(tx) & 31) + mp]) * 255;
-                    olovkaZid.Color = Color.FromArgb((int)(pixelColor / 1.3), (int)(pixelColor / 1.3), pixelColor);
+                    // --- CRTANJE PODA ---
+                    int floorType = mapF[(int)(ty / 32.0) * mapX + (int)(tx / 32.0)];
+                    int floorOffset = (floorType - 1) * 3072;
+                    if (floorOffset < 0) floorOffset = 0;
 
-                    g.DrawLine(olovkaZid, (int)(screenX), (int)y, (int)(screenX), (int)y + 1);
+                    int floorPixel = floorOffset + (ty_idx * 32 + tx_idx) * 3;
+
+                    int fR = Textures.AllTextures[floorPixel + 0];
+                    int fG = Textures.AllTextures[floorPixel + 1];
+                    int fB = Textures.AllTextures[floorPixel + 2];
+
+                    cetkaPodKrov.Color = Color.FromArgb(fR, fG, fB);
+                    g.FillRectangle(cetkaPodKrov, (int)screenX, y, rayWidth, 1);
 
 
-                    //-----CRTANJE KROVA-----
-                    mp = mapC[(int)(ty / 32.0) * mapX + (int)(tx / 32.0)] * 32 * 32;
+                    // --- CRTANJE KROVA ---
+                    int ceilingType = mapC[(int)(ty / 32.0) * mapX + (int)(tx / 32.0)];
+                    int ceilingOffset = (ceilingType - 1) * 3072;
+                    if (ceilingOffset < 0) ceilingOffset = 0;
 
-                    pixelColor = (int)(allTextures[((int)(ty) & 31) * 32 + ((int)(tx) & 31) + mp]) * 255;
-                    olovkaZid.Color = Color.FromArgb((int)(pixelColor / 2.0), (int)(pixelColor / 1.2), (int)(pixelColor / 2.0));
+                    int ceilPixel = ceilingOffset + (ty_idx * 32 + tx_idx) * 3;
 
-                    g.DrawLine(olovkaZid, (int)(screenX), (int)320 - y, (int)(screenX), (int)320 - y + 1);
+                    int cR = Textures.AllTextures[ceilPixel + 0];
+                    int cG = Textures.AllTextures[ceilPixel + 1];
+                    int cB = Textures.AllTextures[ceilPixel + 2];
+
+                    cetkaPodKrov.Color = Color.FromArgb(cR, cG, cB);
+                    g.FillRectangle(cetkaPodKrov, (int)screenX, viewHeight - y, rayWidth, 1);
                 }
-                */
+                
                 ra += fov / numRays;
                 if (ra < 0) ra += 2 * Math.PI;
                 if (ra > 2 * Math.PI) ra -= 2 * Math.PI;
+            }
+
+            // --- CRTANJE SPRITE-OVA ---
+
+            //Koordinate sprite-a u odnosu na koordinate igraca
+            double sx = sp[0].x - playerX;
+            double sy = sp[0].y - playerY;
+            double sz = sp[0].z;
+
+            //Ugao sprite-a u odnosu na igraca
+            double spriteAngle = Math.Atan2(sy, sx);
+            double relativeAngle = spriteAngle - playerA;
+
+            if (relativeAngle < -Math.PI) relativeAngle += 2 * Math.PI;
+            if (relativeAngle > Math.PI) relativeAngle -= 2 * Math.PI;
+
+            // Sprite je vidljiv samo ako je ispred nas
+            if (relativeAngle > -Math.PI / 2 && relativeAngle < Math.PI / 2)
+            {
+                // Udaljenost do sprite-a
+                double dist = Math.Sqrt(sx * sx + sy * sy);
+
+                if (dist > 0.1)
+                {
+                    double screenX_pos = (relativeAngle / fov) * viewWidth + (viewWidth / 2.0);
+                    double screenY_pos = (viewHeight / 2.0);
+
+                    int spriteSize = (int)((mapS * viewHeight) / dist);
+
+                    g.FillRectangle(Brushes.Yellow, (int)(screenX_pos - spriteSize / 2), (int)(screenY_pos - spriteSize / 2), spriteSize, spriteSize);
+                }
             }
 
         }
