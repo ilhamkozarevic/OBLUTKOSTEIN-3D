@@ -119,13 +119,18 @@ namespace oblutkostein_3D
             public int state;    //on, off
             public int map;      //texture to show
             public int x, y, z;  //position
+            public double w, h;
         }
 
         sprite[] sp = new sprite[4];
 
+        double[] depth;
+
         public Form1()
         {
             InitializeComponent();
+
+            depth = new double[numRays];
 
             this.Text = "Oblutkostein 3D";
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -142,7 +147,7 @@ namespace oblutkostein_3D
             playerdX = Math.Cos(playerA);
             playerdY = Math.Sin(playerA);
 
-            sp[0].type = 1; sp[0].state = 1; sp[0].map = 0; sp[0].x = 150; sp[0].y = 150; sp[0].z = 20; //sprite 1
+            sp[0].type = 1; sp[0].state = 1; sp[0].map = 0; sp[0].x = 150; sp[0].y = 150; sp[0].z = -5; sp[0].w = 1; sp[0].h = 1; //sprite 1
         }
 
         //double degToRad(double a) { return a * Math.PI / 180.0; }
@@ -386,7 +391,7 @@ namespace oblutkostein_3D
 
                     ty += ty_step;
                 }
-
+                
                 //-----CRTANJE PODA I KROVA-----
                 for (y = (int)(lineOff + lineH); y < viewHeight; y++)
                 {
@@ -430,6 +435,8 @@ namespace oblutkostein_3D
                     g.FillRectangle(cetkaPodKrov, (int)screenX, viewHeight - y, rayWidth, 1);
                 }
                 
+                depth[r] = disT;
+
                 ra += fov / numRays;
                 if (ra < 0) ra += 2 * Math.PI;
                 if (ra > 2 * Math.PI) ra -= 2 * Math.PI;
@@ -440,7 +447,9 @@ namespace oblutkostein_3D
             //Koordinate sprite-a u odnosu na koordinate igraca
             double sx = sp[0].x - playerX;
             double sy = sp[0].y - playerY;
-            double sz = sp[0].z;
+
+            // Udaljenost do sprite-a
+            double dist = Math.Sqrt(sx * sx + sy * sy);
 
             //Ugao sprite-a u odnosu na igraca
             double spriteAngle = Math.Atan2(sy, sx);
@@ -449,20 +458,47 @@ namespace oblutkostein_3D
             if (relativeAngle < -Math.PI) relativeAngle += 2 * Math.PI;
             if (relativeAngle > Math.PI) relativeAngle -= 2 * Math.PI;
 
-            // Sprite je vidljiv samo ako je ispred nas
-            if (relativeAngle > -Math.PI / 2 && relativeAngle < Math.PI / 2)
+            if (dist > 0.1 && relativeAngle > -Math.PI / 2 && relativeAngle < Math.PI / 2)
             {
-                // Udaljenost do sprite-a
-                double dist = Math.Sqrt(sx * sx + sy * sy);
+                double baseSize = (mapS * viewHeight) / dist;
 
-                if (dist > 0.1)
+                int sWidth = (int)(baseSize * sp[0].w);
+                int sHeight = (int)(baseSize * sp[0].h);
+
+                double vOffset = (sp[0].z * viewHeight) / dist;
+
+                int screenX_pos = (int)((relativeAngle / fov) * viewWidth + (viewWidth / 2.0));
+                int screenY_pos = (int)(viewHeight / 2 - vOffset);
+
+                for (int x = 0; x < sWidth; x++)
                 {
-                    double screenX_pos = (relativeAngle / fov) * viewWidth + (viewWidth / 2.0);
-                    double screenY_pos = (viewHeight / 2.0);
+                    int currX = screenX_pos - sWidth / 2 + x;
+                    if (currX >= 0 && currX < viewWidth)
+                    {
+                        int rayIdx = currX * numRays / viewWidth;
+                        if (dist < depth[rayIdx])
+                        {
+                            int tx_s = (int)(x * 32.0 / sWidth);
+                            int spriteOffset = sp[0].map * 3072;
 
-                    int spriteSize = (int)((mapS * viewHeight) / dist);
+                            for (int y = 0; y < sHeight; y++)
+                            {
+                                int ty_s = (int)(y * 32.0 / sHeight);
 
-                    g.FillRectangle(Brushes.Yellow, (int)(screenX_pos - spriteSize / 2), (int)(screenY_pos - spriteSize / 2), spriteSize, spriteSize);
+                                int pixel = spriteOffset + (ty_s * 32 + tx_s) * 3;
+
+                                int r = Textures.SpriteTextures[pixel + 0];
+                                int g_ = Textures.SpriteTextures[pixel + 1];
+                                int b = Textures.SpriteTextures[pixel + 2];
+
+                                if (!(r == 255 && g_ == 0 && b == 255))
+                                {
+                                    cetkaPodKrov.Color = Color.FromArgb(r, g_, b);
+                                    g.FillRectangle(cetkaPodKrov, currX, (screenY_pos - sHeight / 2) + y, 1, 1);
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
