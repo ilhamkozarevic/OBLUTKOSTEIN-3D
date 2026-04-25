@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿using System;
+﻿﻿﻿﻿﻿﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -126,6 +126,8 @@ namespace oblutkostein_3D
 
         double[] depth;
 
+        Bitmap gunTexture;
+
         public Form1()
         {
             InitializeComponent();
@@ -147,7 +149,28 @@ namespace oblutkostein_3D
             playerdX = Math.Cos(playerA);
             playerdY = Math.Sin(playerA);
 
-            sp[0].type = 1; sp[0].state = 1; sp[0].map = 0; sp[0].x = 150; sp[0].y = 150; sp[0].z = -5; sp[0].w = 1; sp[0].h = 1; //sprite 1
+            sp[0].type = 1; sp[0].state = 1; sp[0].map = 0; sp[0].x = 150; sp[0].y = 150; sp[0].z = 5; sp[0].w = 1; sp[0].h = 1; //sprite 1
+
+            gunTexture = new Bitmap(32, 32);
+
+            for (int y = 0; y < 32; y++)
+            {
+                for (int x = 0; x < 32; x++)
+                {
+                    int pIdx = (y * 32 + x) * 3;
+
+                    Color c = Color.FromArgb(
+                        Textures.gunTexture[pIdx],
+                        Textures.gunTexture[pIdx + 1],
+                        Textures.gunTexture[pIdx + 2]
+                    );
+
+                    if (c.R == 255 && c.G == 0 && c.B == 255)
+                        gunTexture.SetPixel(x, y, Color.Transparent);
+                    else
+                        gunTexture.SetPixel(x, y, c);
+                }
+            }
         }
 
         //double degToRad(double a) { return a * Math.PI / 180.0; }
@@ -191,7 +214,7 @@ namespace oblutkostein_3D
 
 
             //-----RAY CASTING-----
-            ra = playerA - (fov/2.0);
+            ra = playerA - (fov / 2.0);
             if (ra < 0) ra += 2 * Math.PI;
             if (ra > 2 * Math.PI) ra -= 2 * Math.PI;
 
@@ -201,7 +224,7 @@ namespace oblutkostein_3D
             {
                 vmt = 0;
                 hmt = 0;
-                
+
                 //HORIZONTALNA PROVJERA
                 dof = 0;
                 disH = 1000000;
@@ -391,7 +414,7 @@ namespace oblutkostein_3D
 
                     ty += ty_step;
                 }
-                
+
                 //-----CRTANJE PODA I KROVA-----
                 for (y = (int)(lineOff + lineH); y < viewHeight; y++)
                 {
@@ -434,7 +457,7 @@ namespace oblutkostein_3D
                     cetkaPodKrov.Color = Color.FromArgb(cR, cG, cB);
                     g.FillRectangle(cetkaPodKrov, (int)screenX, viewHeight - y, rayWidth, 1);
                 }
-                
+
                 depth[r] = disT;
 
                 ra += fov / numRays;
@@ -444,63 +467,90 @@ namespace oblutkostein_3D
 
             // --- CRTANJE SPRITE-OVA ---
 
-            //Koordinate sprite-a u odnosu na koordinate igraca
             double sx = sp[0].x - playerX;
             double sy = sp[0].y - playerY;
-
-            // Udaljenost do sprite-a
             double dist = Math.Sqrt(sx * sx + sy * sy);
 
-            //Ugao sprite-a u odnosu na igraca
-            double spriteAngle = Math.Atan2(sy, sx);
-            double relativeAngle = spriteAngle - playerA;
+            double spriteAngle = Math.Atan2(sy, sx) - playerA;
+            while (spriteAngle <= -Math.PI) spriteAngle += 2 * Math.PI;
+            while (spriteAngle > Math.PI) spriteAngle -= 2 * Math.PI;
 
-            if (relativeAngle < -Math.PI) relativeAngle += 2 * Math.PI;
-            if (relativeAngle > Math.PI) relativeAngle -= 2 * Math.PI;
-
-            if (dist > 0.1 && relativeAngle > -Math.PI / 2 && relativeAngle < Math.PI / 2)
+            if (dist > 10 && Math.Abs(spriteAngle) < (fov / 1.1))
             {
-                double baseSize = (mapS * viewHeight) / dist;
+                double baseSize = Math.Abs((mapS * viewHeight) / dist);
 
-                int sWidth = (int)(baseSize * sp[0].w);
-                int sHeight = (int)(baseSize * sp[0].h);
+                double spriteWidth = baseSize * sp[0].w;
+                double spriteHeight = baseSize * sp[0].h;
 
-                double vOffset = (sp[0].z * viewHeight) / dist;
+                double zOffset = (sp[0].z * viewHeight) / dist;
 
-                int screenX_pos = (int)((relativeAngle / fov) * viewWidth + (viewWidth / 2.0));
-                int screenY_pos = (int)(viewHeight / 2 - vOffset);
+                double screenX_pos = (spriteAngle / fov) * viewWidth + (viewWidth / 2.0);
+                double screenY_pos = (viewHeight / 2.0) + zOffset;
 
-                for (int x = 0; x < sWidth; x++)
+                int startX = (int)(screenX_pos - spriteWidth / 2);
+
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+                g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
+
+                for (int col = 0; col < 32; col++)
                 {
-                    int currX = screenX_pos - sWidth / 2 + x;
-                    if (currX >= 0 && currX < viewWidth)
+                    double xStartPrecise = startX + (col * spriteWidth / 32.0);
+                    double xEndPrecise = startX + ((col + 1) * spriteWidth / 32.0);
+
+                    int x1 = (int)Math.Floor(xStartPrecise);
+                    int x2 = (int)Math.Ceiling(xEndPrecise);
+                    int currentColumnWidth = (x2 - x1) + 1;
+
+                    if (x2 >= 0 && x1 < viewWidth)
                     {
-                        int rayIdx = currX * numRays / viewWidth;
-                        if (dist < depth[rayIdx])
+                        int checkX = Math.Max(0, Math.Min(viewWidth - 1, x1));
+                        int r = (checkX * numRays) / viewWidth;
+
+                        if (dist < depth[r])
                         {
-                            int tx_s = (int)(x * 32.0 / sWidth);
                             int spriteOffset = sp[0].map * 3072;
 
-                            for (int y = 0; y < sHeight; y++)
+                            using (Bitmap tempCol = new Bitmap(1, 32))
                             {
-                                int ty_s = (int)(y * 32.0 / sHeight);
-
-                                int pixel = spriteOffset + (ty_s * 32 + tx_s) * 3;
-
-                                int r = Textures.SpriteTextures[pixel + 0];
-                                int g_ = Textures.SpriteTextures[pixel + 1];
-                                int b = Textures.SpriteTextures[pixel + 2];
-
-                                if (!(r == 255 && g_ == 0 && b == 255))
+                                for (int py = 0; py < 32; py++)
                                 {
-                                    cetkaPodKrov.Color = Color.FromArgb(r, g_, b);
-                                    g.FillRectangle(cetkaPodKrov, currX, (screenY_pos - sHeight / 2) + y, 1, 1);
+                                    int pIdx = spriteOffset + (py * 32 + col) * 3;
+                                    Color c = Color.FromArgb(
+                                        Textures.SpriteTextures[pIdx],
+                                        Textures.SpriteTextures[pIdx + 1],
+                                        Textures.SpriteTextures[pIdx + 2]);
+
+                                    if (c.R == 255 && c.G == 0 && c.B == 255)
+                                        tempCol.SetPixel(0, py, Color.Transparent);
+                                    else
+                                        tempCol.SetPixel(0, py, c);
                                 }
+
+                                g.DrawImage(tempCol, x1, (int)(screenY_pos - spriteHeight / 2), currentColumnWidth, (int)spriteHeight);
                             }
                         }
                     }
                 }
             }
+
+            // --- CRTANJE PISTOLJA  ---
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+
+            int gunWidth = (int)(viewHeight * 0.35);
+            int gunHeight = (int)(viewHeight * 0.35);
+
+            int gunX = (viewWidth / 2) - (gunWidth / 2);
+
+            int gunY = viewHeight - gunHeight + 20;
+
+            if (goUp || goDown || goLeft || goRight)
+            {
+                double bobSpeed = currentTime * 10;
+                gunX += (int)(Math.Sin(bobSpeed) * 5);
+                gunY += (int)(Math.Abs(Math.Cos(bobSpeed) * 5));
+            }
+
+            g.DrawImage(gunTexture, gunX, gunY, gunWidth, gunHeight);
 
         }
 
@@ -520,31 +570,57 @@ namespace oblutkostein_3D
 
             if (!(goUp && goDown))
             {
-                xo = 0;
-                yo = 0;
-
-                if (playerdX < 0) { xo = -20; } else { xo = 20; }
-                if (playerdY < 0) { yo = -20; } else { yo = 20; }
+                xo = 0; if (playerdX < 0) { xo = -20; } else { xo = 20; }
+                yo = 0; if (playerdY < 0) { yo = -20; } else { yo = 20; }
 
                 ipx = (int)(playerX / 64.0);
                 ipx_add_xo = (int)((playerX + xo) / 64.0);
                 ipx_sub_xo = (int)((playerX - xo) / 64.0);
-
                 ipy = (int)(playerY / 64.0);
                 ipy_add_yo = (int)((playerY + yo) / 64.0);
                 ipy_sub_yo = (int)((playerY - yo) / 64.0);
 
+
                 if (goUp)
                 {
-                    if (mapW[ipy * mapX + ipx_add_xo] == 0) { playerX += playerdX * speed * dt; } //Sudar sa vertikalnim zidom - kretanje naprijed
-                    if (mapW[ipy_add_yo * mapX + ipx] == 0) { playerY += playerdY * speed * dt; } //Sudar sa horizontalnim zidom - kretanje naprijed
-                    if (mapW[(int)(playerY / 64.0) * mapX + (int)(playerX / 64.0)] != 0) { playerX -= playerdX * speed * dt; playerY -= playerdY * speed * dt; } //Sudar dijagonalno - kretanje naprijed
+                    bool canMoveX = mapW[ipy * mapX + ipx_add_xo] == 0;
+                    bool canMoveY = mapW[ipy_add_yo * mapX + ipx] == 0;
+
+                    for (int i = 0; i < sp.Length; i++)
+                    {
+                        if (sp[i].state == 1)
+                        {
+                            double nx = playerX + playerdX * speed * dt;
+                            double ny = playerY + playerdY * speed * dt;
+
+                            if (distance(nx, playerY, sp[i].x, sp[i].y, 0) < 20) canMoveX = false;
+                            if (distance(playerX, ny, sp[i].x, sp[i].y, 0) < 20) canMoveY = false;
+                        }
+                    }
+
+                    if (canMoveX) { playerX += playerdX * speed * dt; }
+                    if (canMoveY) { playerY += playerdY * speed * dt; }
                 }
+
                 if (goDown)
                 {
-                    if (mapW[ipy * mapX + ipx_sub_xo] == 0) { playerX -= playerdX * speed * dt; } // Sudar sa vertikalnim zidom - kretanje nazad
-                    if (mapW[ipy_sub_yo * mapX + ipx] == 0) { playerY -= playerdY * speed * dt; } // Sudar sa horizontalnim zidom - kretanje nazad
-                    if (mapW[(int)(playerY / 64.0) * mapX + (int)(playerX / 64.0)] != 0) { playerX += playerdX * speed * dt; playerY += playerdY * speed * dt; } // Sudar dijagonalno - kretanje nazad
+                    bool canMoveX = mapW[ipy * mapX + ipx_sub_xo] == 0;
+                    bool canMoveY = mapW[ipy_sub_yo * mapX + ipx] == 0;
+
+                    for (int i = 0; i < sp.Length; i++)
+                    {
+                        if (sp[i].state == 1)
+                        {
+                            double nx = playerX - playerdX * speed * dt;
+                            double ny = playerY - playerdY * speed * dt;
+
+                            if (distance(nx, playerY, sp[i].x, sp[i].y, 0) < 20) canMoveX = false;
+                            if (distance(playerX, ny, sp[i].x, sp[i].y, 0) < 20) canMoveY = false;
+                        }
+                    }
+
+                    if (canMoveX) { playerX -= playerdX * speed * dt; }
+                    if (canMoveY) { playerY -= playerdY * speed * dt; }
                 }
             }
 
