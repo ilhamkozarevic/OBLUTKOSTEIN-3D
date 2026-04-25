@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿using System;
+﻿﻿﻿﻿﻿﻿﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -127,6 +127,17 @@ namespace oblutkostein_3D
         double[] depth;
 
         Bitmap gunTexture;
+
+        public struct Bullet
+        {
+            public double x, y;
+            public double angle;
+            public double speed;
+            public double distanceTraveled;
+            public bool active;
+        }
+
+        List<Bullet> bullets = new List<Bullet>();
 
         public Form1()
         {
@@ -552,6 +563,43 @@ namespace oblutkostein_3D
 
             g.DrawImage(gunTexture, gunX, gunY, gunWidth, gunHeight);
 
+
+            // --- CRTANJE METAKA ---
+            foreach (var b in bullets)
+            {
+                double bX = b.x - playerX;
+                double bY = b.y - playerY;
+                double bulletDist = Math.Sqrt(bX * bX + bY * bY);
+
+                double bulletRelativeAngle = Math.Atan2(bY, bX) - playerA;
+
+                while (bulletRelativeAngle <= -Math.PI) bulletRelativeAngle += 2 * Math.PI;
+                while (bulletRelativeAngle > Math.PI) bulletRelativeAngle -= 2 * Math.PI;
+
+                double fixbulletDistance = bulletDist * Math.Cos(bulletRelativeAngle);
+                if (fixbulletDistance < 0.1) fixbulletDistance = 0.1;
+
+                if (Math.Abs(bulletRelativeAngle) < (fov / 1.2))
+                {
+                    double bulletSize = (8.0 * viewHeight) / fixbulletDistance;
+
+                    if (bulletSize > 40) bulletSize = 40;
+                    if (bulletSize < 2) bulletSize = 2;
+
+                    double screenX_pos = (bulletRelativeAngle / fov) * viewWidth + (viewWidth / 2.0);
+                    double screenY_pos = (viewHeight / 2.0);
+
+                    int bW = (int)bulletSize;
+                    int bH = (int)(bulletSize * 0.6);
+
+                    g.FillEllipse(Brushes.White, (int)(screenX_pos - bW / 2), (int)(screenY_pos - bH / 2), bW, bH);
+
+                    using (Pen glow = new Pen(Color.FromArgb(200, Color.Yellow), 2))
+                    {
+                        g.DrawEllipse(glow, (int)(screenX_pos - bW / 2), (int)(screenY_pos - bH / 2), bW, bH);
+                    }
+                }
+            }
         }
 
         private void GameLoop(object sender, EventArgs e)
@@ -642,6 +690,35 @@ namespace oblutkostein_3D
                     playerdY = Math.Sin(playerA);
                 }
             }
+
+            UpdateBullets(dt);
+        }
+
+        private void UpdateBullets(double dt)
+        {
+            for (int i = bullets.Count - 1; i >= 0; i--)
+            {
+                Bullet b = bullets[i];
+
+                double nextX = b.x + Math.Cos(b.angle) * b.speed * dt;
+                double nextY = b.y + Math.Sin(b.angle) * b.speed * dt;
+                double distStep = b.speed * dt;
+
+                int mx = (int)(nextX / 64);
+                int my = (int)(nextY / 64);
+                int mp = my * mapX + mx;
+
+                if (mp < 0 || mp >= mapX * mapY || mapW[mp] > 0 || b.distanceTraveled > 2000)
+                {
+                    bullets.RemoveAt(i);
+                    continue;
+                }
+
+                b.x = nextX;
+                b.y = nextY;
+                b.distanceTraveled += distStep;
+                bullets[i] = b;
+            }
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -650,6 +727,7 @@ namespace oblutkostein_3D
             if (e.KeyCode == Keys.S) goDown = true;
             if (e.KeyCode == Keys.A) goLeft = true;
             if (e.KeyCode == Keys.D) goRight = true;
+
             if (e.KeyCode == Keys.E)
             {
                 xo = 0;
@@ -663,6 +741,21 @@ namespace oblutkostein_3D
                 ipy = (int)(playerY / 64.0);
                 ipy_add_yo = (int)((playerY + yo) / 64.0);
                 if (mapW[ipy_add_yo * mapX + ipx_add_xo] == 4) { mapW[ipy_add_yo * mapX + ipx_add_xo] = 0; }
+            }
+
+            if (e.KeyCode == Keys.Q)
+            {
+                Bullet newBullet = new Bullet();
+                newBullet.active = true;
+                newBullet.angle = playerA;
+                newBullet.speed = 600.0;
+
+                double offset = 25.0;
+                newBullet.x = playerX + Math.Cos(playerA) * offset;
+                newBullet.y = playerY + Math.Sin(playerA) * offset;
+
+                newBullet.distanceTraveled = 0;
+                bullets.Add(newBullet);
             }
         }
 
