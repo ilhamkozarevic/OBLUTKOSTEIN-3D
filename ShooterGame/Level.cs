@@ -56,6 +56,8 @@ namespace ShooterGame
                     mapC[i, j] = 1;
                 }
             }
+
+            Raycaster.PrecalculateDistanceTable();
         }
 
         protected override void OnLoad(EventArgs e)

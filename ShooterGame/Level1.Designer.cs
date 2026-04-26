@@ -79,6 +79,7 @@
             this.label3.Size = new System.Drawing.Size(800, 600);
             this.label3.TabIndex = 11;
             this.label3.Tag = "room_grass_sky";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // Level1
             // 
