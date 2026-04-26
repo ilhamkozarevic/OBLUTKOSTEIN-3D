@@ -1,0 +1,10 @@
+C:\Users\Samed\Documents\Visual Studio 2008\Projects\ShooterGame\ShooterGame\bin\Release\ShooterGame.exe
+C:\Users\Samed\Documents\Visual Studio 2008\Projects\ShooterGame\ShooterGame\bin\Release\ShooterGame.pdb
+C:\Users\Samed\Documents\Visual Studio 2008\Projects\ShooterGame\ShooterGame\obj\Release\ResolveAssemblyReference.cache
+C:\Users\Samed\Documents\Visual Studio 2008\Projects\ShooterGame\ShooterGame\obj\Release\ShooterGame.GameForm.resources
+C:\Users\Samed\Documents\Visual Studio 2008\Projects\ShooterGame\ShooterGame\obj\Release\ShooterGame.Level.resources
+C:\Users\Samed\Documents\Visual Studio 2008\Projects\ShooterGame\ShooterGame\obj\Release\ShooterGame.Level1.resources
+C:\Users\Samed\Documents\Visual Studio 2008\Projects\ShooterGame\ShooterGame\obj\Release\ShooterGame.Properties.Resources.resources
+C:\Users\Samed\Documents\Visual Studio 2008\Projects\ShooterGame\ShooterGame\obj\Release\ShooterGame.csproj.GenerateResource.Cache
+C:\Users\Samed\Documents\Visual Studio 2008\Projects\ShooterGame\ShooterGame\obj\Release\ShooterGame.exe
+C:\Users\Samed\Documents\Visual Studio 2008\Projects\ShooterGame\ShooterGame\obj\Release\ShooterGame.pdb

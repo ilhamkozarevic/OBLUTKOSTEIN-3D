@@ -11,7 +11,15 @@ namespace ShooterGame
 {
     public partial class Level : UserControl
     {
-        public byte[,] map;
+        public byte[,] mapW;
+        public byte[,] mapF;
+        public byte[,] mapC;
+
+        private Dictionary<string, ZoneData> zones = new Dictionary<string, ZoneData>()
+        {
+            {"room_grass_sky", new ZoneData(0, 2, 1)},
+            {"wall_sponge", new ZoneData(3, 1, 1)}
+        };
 
         public List<Rectangle> collisionRects;
 
@@ -34,13 +42,19 @@ namespace ShooterGame
 
             collisionRects = new List<Rectangle>();
 
-            map = new byte[40, 30];
+            mapW = new byte[40, 30];
+            mapF = new byte[40, 30];
+            mapC = new byte[40, 30];
 
+
+            // set na neke default vrijednosti
             for (int i = 0; i < 40; i ++)
             {
                 for (int j = 0; j < 30; j++)
                 {
-                    map[i, j] = 0;
+                    mapW[i, j] = 0;
+                    mapF[i, j] = 2;
+                    mapC[i, j] = 1;
                 }
             }
         }
@@ -66,9 +80,9 @@ namespace ShooterGame
                     {
                         for (int j = startY; j < endY; j++)
                         {
-                            if (i >= 40 || j >= 30) continue;
+                            if (i >= 40 || j >= 30 || i < 0 || j < 0) continue;
 
-                            map[i, j] = 1;
+                            mapW[i, j] = 1;
                             collisionRects.Add(new Rectangle(20 * i, 20 * j, 20, 20));
                         }
                     }
@@ -88,30 +102,25 @@ namespace ShooterGame
         {
  	        base.OnPaint(e);
 
-
             e.Graphics.Clear(Color.Black);
+
+            //DrawGrid(e.Graphics);
             if (this.DesignMode) return; // ako smo u designeru ne izvrsava se kod
 
-            DrawLevel(e.Graphics);
+            //DrawLevel(e.Graphics);
+            //DrawPlayer(e.Graphics);
+            Raycaster.DrawRays3D(e.Graphics);
             
-            using (Pen p = new Pen(Color.DarkSlateGray, 1))
-            {
-                for (int i = 0; i <= ClientRectangle.Width / 2; i += 20)
-                {
-                    e.Graphics.DrawLine(p, i, 0, i, ClientRectangle.Height);
-                }
 
-                for (int i = 0; i <= ClientRectangle.Height; i += 20)
-                {
-                    e.Graphics.DrawLine(p, 0, i, ClientRectangle.Width / 2, i);
-                }  
+            // DEBUG
+            /*
+            using (Font f = new Font(FontFamily.GenericMonospace, 18))
+            {
+                e.Graphics.DrawString(GameControls.currentMouseX + "\n" + GameControls.lastMouseX, f, Brushes.Green, 20, 20);
             }
 
-            Raycaster.DrawRays3D(e.Graphics);
-            DrawPlayer(e.Graphics);
-
             // TODO Draw Enemies etc.
-
+            */
         }
 
         public void DrawLevel(Graphics g) 
@@ -132,6 +141,22 @@ namespace ShooterGame
                 g.FillEllipse(s, (int)Player.x - Player.width, (int)Player.y - Player.height, 2 * Player.width, 2 * Player.height);
                 g.DrawRectangle(new Pen(Color.Red, 1), Player.hitbox);
                 g.DrawLine(new Pen(Color.Yellow, 2), (int)Player.x, (int)Player.y, (int)Player.dirX, (int)Player.dirY);
+            }
+        }
+
+        public void DrawGrid(Graphics g)
+        {
+            using (Pen p = new Pen(Color.DarkSlateGray, 1))
+            {
+                for (int i = 0; i <= ClientRectangle.Width; i += 20)
+                {
+                    g.DrawLine(p, i, 0, i, ClientRectangle.Height);
+                }
+
+                for (int i = 0; i <= ClientRectangle.Height; i += 20)
+                {
+                    g.DrawLine(p, 0, i, ClientRectangle.Width, i);
+                }
             }
         }
     }

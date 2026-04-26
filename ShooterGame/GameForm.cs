@@ -14,7 +14,7 @@ namespace ShooterGame
     {
         // Za delta time
         private Stopwatch stopwatch;
-        public static double deltaTime;
+        public static float deltaTime;
         private long lastTime;
 
         // Za levele
@@ -22,7 +22,7 @@ namespace ShooterGame
 
         public GameForm()
         {
-            this.ClientSize = new Size(800 * 2, 600);
+            this.ClientSize = new Size(800, 600);
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
 
@@ -54,10 +54,10 @@ namespace ShooterGame
         // GAME LOOP
         private void GameLoop(object sender, EventArgs e)
         {
-            deltaTime = (stopwatch.ElapsedMilliseconds - lastTime) / 1000.0;
+            deltaTime = (stopwatch.ElapsedMilliseconds - lastTime) / 1000.0f;
             lastTime = stopwatch.ElapsedMilliseconds;
 
-            if (deltaTime > 0.08) deltaTime = 0.08;
+            if (deltaTime > 0.08) deltaTime = 0.08f;
 
             Player.HandleMovement();
             Player.HandleRotation();
@@ -95,14 +95,6 @@ namespace ShooterGame
             if (e.KeyCode == GameControls.camLeft) Player.camLeft = false;
             if (e.KeyCode == GameControls.camRight) Player.camRight = false;
         }
-
-        protected override bool IsInputKey(Keys keyData)
-        {
-            if (keyData == GameControls.camLeft || keyData == GameControls.camRight) return true;
-
-            return base.IsInputKey(keyData);
-        }
-
 
         // LOAD NEW LEVEL
         private void LoadLevel(Level level)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace ShooterGame
 {
@@ -18,168 +19,245 @@ namespace ShooterGame
         private const int MAP_HEIGHT = 30;
         private const int MAX_DOF    = 64;
 
-        private const int RAYCASTER_RESOLUTION = 200;
+        private const int TEX_W = 32;
+        private const int TEX_H = 32;
 
-        private const double TWO_PI =  Math.PI * 2;
-        private const double DEG_IN_RAD = 0.0174532925; // vrijednost 1 stepena u radijanima
+        private const int RAYCASTER_RESOLUTION = 800
+            ;
+
+        private static Color wallColor = Color.Orange;
+        private static Color floorColor = Color.Gray;
+        private static Color ceilColor = Color.DarkGray;
+
+        private const float TWO_PI =  (float)Math.PI * 2;
+        private const float DEG_IN_RAD = 0.0174532925f; // vrijednost 1 stepena u radijanima
+
+        // Bitmapa za buffer trenutnog frame-a gdje ce se izracunat pozicije svih piksela kao 32 bitna ARGB vrijednost
+        private static Bitmap screenBuffer = new Bitmap(WINDOW_WIDTH, WINDOW_HEIGHT, PixelFormat.Format32bppArgb);
 
         public static void DrawRays3D(Graphics g)
         {
-            double rayAngle = Player.angle - (DEG_IN_RAD * FOV / 2);
+            float rayAngle = Player.angle - (DEG_IN_RAD * FOV / 2);
 
-            double px = Player.x;
-            double py = Player.y;
+            // pravougaonik dimenzija ekrana za upisivanje vrijednosti na screen buffer
+            Rectangle rect = new Rectangle(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-            for (int r = 0; r < RAYCASTER_RESOLUTION; r++)
+            BitmapData bmpData = screenBuffer.LockBits(rect, ImageLockMode.WriteOnly, screenBuffer.PixelFormat);
+
+            float px = Player.x;
+            float py = Player.y;
+
+            unsafe // unsafe blok zbog pointera i upravljanja memorije kao u C
             {
-                if (rayAngle < 0      ) rayAngle += TWO_PI;
-                if (rayAngle >= TWO_PI) rayAngle -= TWO_PI;
+                // pointer na poziciju 0, 0 u bufferu
+                int* screenPtr = (int*)bmpData.Scan0.ToPointer();
 
-                double sinA = Math.Sin(rayAngle); // -sin jer je y koordinata suprotna u C#, olaksa matematiku
-                double cosA = Math.Cos(rayAngle);
-                double nTanA = -Math.Tan(rayAngle); // negative tangent function of the ray angle
-                double nCotA = 1.0 / nTanA; // negative cotangent function of the ray angle
-
-                double hRayX = px;
-                double hRayY = py;
-                double hDist = double.MaxValue;
-
-                double vRayX = px;
-                double vRayY = py;
-                double vDist = double.MaxValue;
-
-                double rDist = double.MaxValue; // ray distance
-
-                Color wallColor = Color.Orange;
-
-                // --- HORIZONTALNA KOMPOMENTA ---
-                if (Math.Abs(sinA) > 0.0001)
+                for (int y = 0; y < WINDOW_HEIGHT; y++)
                 {
-                    double rayX, rayY, xOffset, yOffset;
+                    // offset za citav red (pristupamo screenPtr kao 1D nizu)
+                    int rowOffset = y * WINDOW_WIDTH; 
+                    // pretvaramo boju u ARGB vrijednost koja ce biti spremljena u buffer
+                    int color = (y < WINDOW_HEIGHT / 2) ? ceilColor.ToArgb() : floorColor.ToArgb();
 
-                    if (sinA > 0) // ugao od 0 do pi - gleda gore
+                    for (int x = 0; x < WINDOW_WIDTH; x++) // svaki pixel po x osi
                     {
-                        rayY = Math.Floor(py / TILE_SIZE) * TILE_SIZE + TILE_SIZE;
-                        rayX = (py - rayY) * nCotA + px;
-                        yOffset = TILE_SIZE;
-                        xOffset = -yOffset * nCotA;
+                        // memorijska lokacija [x + rowOffset] u bufferu sprema boju
+                        screenPtr[x + rowOffset] = color; 
                     }
-                    else // ugao od pi do 2pi
+                }
+
+                for (int r = 0; r < RAYCASTER_RESOLUTION; r++)
+                {
+                    if (rayAngle < 0) rayAngle += TWO_PI;
+                    if (rayAngle >= TWO_PI) rayAngle -= TWO_PI;
+
+                    float sinA  = (float) Math.Sin(rayAngle);
+                    float cosA  = (float) Math.Cos(rayAngle);
+                    float nTanA = (float)-Math.Tan(rayAngle); // negative tangent function of the ray angle
+                    float nCotA = 1.0f / nTanA; // negative cotangent function of the ray angle
+
+                    float hRayX = px;
+                    float hRayY = py;
+                    float hDist = float.MaxValue;
+
+                    float vRayX = px;
+                    float vRayY = py;
+                    float vDist = float.MaxValue;
+
+                    double rDist = double.MaxValue; // ray distance
+
+                    // --- HORIZONTALNA KOMPOMENTA ---
+                    if (Math.Abs(sinA) > 0.0001)
                     {
-                        rayY = Math.Floor(py / TILE_SIZE) * TILE_SIZE - 0.0001;
-                        rayX = (py - rayY) * nCotA + px;
-                        yOffset = -TILE_SIZE;
-                        xOffset = -yOffset * nCotA;
-                    }
+                        float rayX, rayY, xOffset, yOffset;
 
-                    for (int dof = 0; dof < MAX_DOF; dof++) // depth of field
-                    {
-                        // pretvare koordinate ekrana u koordinate niza
-
-                        int mapX = (int)Math.Floor(rayX / TILE_SIZE);
-                        int mapY = (int)Math.Floor(rayY / TILE_SIZE);
-
-                        // ako zraka izadje izvan mape prekida se petlja
-                        if (mapX < 0 || mapX >= MAP_WIDTH || mapY < 0 || mapY >= MAP_HEIGHT) break;
-
-                        if (GameForm.currentLevel.map[mapX, mapY] == 1) // ako je pronadjen zid
+                        if (sinA > 0) // ugao od 0 do pi - gleda gore
                         {
-                            hRayX = rayX;
-                            hRayY = rayY;
-
-                            double hRayDx = hRayX - px;
-                            double hRayDy = hRayY - py;
-
-                            hDist = Math.Sqrt((hRayDx * hRayDx) + (hRayDy * hRayDy)); // formula za udaljenost od koord. pocetka
-
-                            break;
+                            rayY = (float)Math.Floor(py / TILE_SIZE) * TILE_SIZE + TILE_SIZE;
+                            rayX = (py - rayY) * nCotA + px;
+                            yOffset = TILE_SIZE;
+                            xOffset = -yOffset * nCotA;
+                        }
+                        else // ugao od pi do 2pi
+                        {
+                            rayY = (float)Math.Floor(py / TILE_SIZE) * TILE_SIZE - 0.0001f;
+                            rayX = (py - rayY) * nCotA + px;
+                            yOffset = -TILE_SIZE;
+                            xOffset = -yOffset * nCotA;
                         }
 
-                        rayX += xOffset;
-                        rayY += yOffset;
-                    }
-                }
-
-                // --- VERTIKALNA KOMPONENTA ---
-
-                if (Math.Abs(cosA) > 0.0001)
-                {
-                    double rayX, rayY, xOffset, yOffset;
-
-                    if (cosA > 0) // ugao od 0 do pi - gleda desno
-                    {
-                        rayX = Math.Floor(px / TILE_SIZE) * TILE_SIZE + TILE_SIZE;
-                        rayY = (px - rayX) * nTanA + py;
-                        xOffset = TILE_SIZE;
-                        yOffset = -xOffset * nTanA;
-                    }
-                    else // ugao od pi do 2pi
-                    {
-                        rayX = Math.Floor(px / TILE_SIZE) * TILE_SIZE - 0.0001;
-                        rayY = (px - rayX) * nTanA + py;
-                        xOffset = -TILE_SIZE;
-                        yOffset = -xOffset * nTanA;
-                    }
-
-                    for (int dof = 0; dof < MAX_DOF; dof++) // depth of field
-                    {
-                        // pretvare koordinate ekrana u koordinate niza
-
-                        int mapX = (int)Math.Floor(rayX / TILE_SIZE);
-                        int mapY = (int)Math.Floor(rayY / TILE_SIZE);
-
-                        // ako zraka izadje izvan mape prekida se petlja
-                        if (mapX < 0 || mapX >= MAP_WIDTH || mapY < 0 || mapY >= MAP_HEIGHT) break;
-
-                        if (GameForm.currentLevel.map[mapX, mapY] == 1) // ako je pronadjen zid
+                        for (int dof = 0; dof < MAX_DOF; dof++) // depth of field
                         {
-                            vRayX = rayX;
-                            vRayY = rayY;
+                            // pretvare koordinate ekrana u koordinate niza
 
-                            double vRayDx = vRayX - px;
-                            double vRayDy = vRayY - py;
+                            int mapX = (int)Math.Floor(rayX / TILE_SIZE);
+                            int mapY = (int)Math.Floor(rayY / TILE_SIZE);
 
-                            vDist = Math.Sqrt((vRayDx * vRayDx) + (vRayDy * vRayDy)); // formula za udaljenost od koord. pocetka
+                            // ako zraka izadje izvan mape prekida se petlja
+                            if (mapX < 0 || mapX >= MAP_WIDTH || mapY < 0 || mapY >= MAP_HEIGHT) break;
 
-                            break;
+                            if (GameForm.currentLevel.mapW[mapX, mapY] == 1) // ako je pronadjen zid
+                            {
+                                hRayX = rayX;
+                                hRayY = rayY;
+
+                                double hRayDx = hRayX - px;
+                                double hRayDy = hRayY - py;
+
+                                hDist = (float)Math.Sqrt((hRayDx * hRayDx) + (hRayDy * hRayDy)); // formula za udaljenost od koord. pocetka
+
+                                break;
+                            }
+
+                            rayX += xOffset;
+                            rayY += yOffset;
+                        }
+                    }
+
+                    // --- VERTIKALNA KOMPONENTA ---
+
+                    if (Math.Abs(cosA) > 0.0001)
+                    {
+                        float rayX, rayY, xOffset, yOffset;
+
+                        if (cosA > 0) // ugao od 0 do pi - gleda desno
+                        {
+                            rayX = (float)Math.Floor(px / TILE_SIZE) * TILE_SIZE + TILE_SIZE;
+                            rayY = (px - rayX) * nTanA + py;
+                            xOffset = TILE_SIZE;
+                            yOffset = -xOffset * nTanA;
+                        }
+                        else // ugao od pi do 2pi
+                        {
+                            rayX = (float)Math.Floor(px / TILE_SIZE) * TILE_SIZE - 0.0001f;
+                            rayY = (px - rayX) * nTanA + py;
+                            xOffset = -TILE_SIZE;
+                            yOffset = -xOffset * nTanA;
                         }
 
-                        rayX += xOffset;
-                        rayY += yOffset;
+                        for (int dof = 0; dof < MAX_DOF; dof++) // depth of field
+                        {
+                            // pretvare koordinate ekrana u koordinate niza
+
+                            int mapX = (int)Math.Floor(rayX / TILE_SIZE);
+                            int mapY = (int)Math.Floor(rayY / TILE_SIZE);
+
+                            // ako zraka izadje izvan mape prekida se petlja
+                            if (mapX < 0 || mapX >= MAP_WIDTH || mapY < 0 || mapY >= MAP_HEIGHT) break;
+
+                            if (GameForm.currentLevel.mapW[mapX, mapY] == 1) // ako je pronadjen zid
+                            {
+                                vRayX = rayX;
+                                vRayY = rayY;
+
+                                double vRayDx = vRayX - px;
+                                double vRayDy = vRayY - py;
+
+                                vDist = (float)Math.Sqrt((vRayDx * vRayDx) + (vRayDy * vRayDy)); // formula za udaljenost od koord. pocetka
+
+                                break;
+                            }
+
+                            rayX += xOffset;
+                            rayY += yOffset;
+                        }
                     }
-                }
 
-                if (hDist < vDist)
-                {
-                    g.DrawLine(new Pen(Color.Pink, 1), (int)px, (int)py, (int)hRayX, (int)hRayY);
-                    wallColor = Color.FromArgb(255, 160, 0);
-                    rDist = hDist;
-                }
-                else
-                {
-                    g.DrawLine(new Pen(Color.Magenta, 1), (int)px, (int)py, (int)vRayX, (int)vRayY);
-                    wallColor = Color.FromArgb(225, 120, 0);
-                    rDist = vDist;
-                }
+                    float tx = 0f; // hit pos of ray
 
-                rayAngle += ((double)FOV / RAYCASTER_RESOLUTION) * DEG_IN_RAD;
+                    if (hDist < vDist)
+                    {
+                        rDist = hDist;
+                        tx = hRayX % TILE_SIZE; // udari horizontalnu osu pa je X i ogranici na tile size
+                        if (sinA > 0) tx = TILE_SIZE - tx;
+                    }
+                    else
+                    {
+                        rDist = vDist;
+                        tx = vRayY % TILE_SIZE; // udari vertikalnu osu pa je Y i ogranici na tile size
+                        if (cosA < 0) tx = TILE_SIZE - tx;
+                    }
 
-                // --- DRAW 3D WALLS ---
+                    // fisheye fix
+                    rDist *= Math.Cos(rayAngle - Player.angle);
 
-                rDist *= Math.Cos(rayAngle - Player.angle);
+                    // visina jednog isjecka slike
+                    double lineHeight = (TILE_SIZE * WINDOW_HEIGHT) / rDist;
 
-                double lineHeight = (TILE_SIZE * 600) / rDist;
-                if (lineHeight > 600) lineHeight = 600; 
-                double lineOffset = 300 - (lineHeight / 2);
+                    double lineOffset = (WINDOW_HEIGHT / 2) - (lineHeight / 2);
 
-                double lineWidth = (double)WINDOW_WIDTH / (double)RAYCASTER_RESOLUTION;
-                double lineX = (r * (int)lineWidth) + 820;
+                    float tx_idx  = (tx / TILE_SIZE) * TEX_W;
 
-                using (Pen wallPen = new Pen(wallColor, (int)lineWidth + 1))
-                {
-                    g.DrawLine(wallPen, (int)lineX, (int)lineOffset, (int)lineX, (int)lineHeight + (int)lineOffset);
+                    double ty_step = (TEX_H / lineHeight);
+                    double ty_curr = 0;
+
+                    // clipping ako tekstura ode van ekrana
+                    int drawStart = (int)lineOffset;
+                    if (drawStart < 0)
+                    {
+                        ty_curr = -drawStart * ty_step;
+                        drawStart = 0;
+                    }
+                    int drawEnd = (int)(lineOffset + lineHeight);
+                    if (drawEnd >= WINDOW_HEIGHT) drawEnd = WINDOW_HEIGHT - 1;
+
+                    float lineWidth = (float)(WINDOW_WIDTH) / RAYCASTER_RESOLUTION;
+                    int screenXStart = (int)(r * lineWidth);
+
+                    for (int y = drawStart; y < drawEnd; y++)
+                    {
+                        int ty_idx = (int)ty_curr & 31; // osigura da ne predje 32, teksture su 0-31
+                        tx_idx = (int)tx_idx & (TEX_W - 1);
+
+                        // indeksiranje prema nizu za teksture (3 bajta za svaki piksel)
+                        int pixel_idx = (ty_idx * 32 + (int)tx_idx) * 3 + 3072 * 2;
+
+                        // simulacija osvjetljenja zatamnjenem naleglih zidova
+                        float shade = (hDist < vDist) ? 1.0f : 0.8f;
+                        byte r_col = (byte)(Textures.AllTextures[pixel_idx + 0] * shade);
+                        byte g_col = (byte)(Textures.AllTextures[pixel_idx + 1] * shade);
+                        byte b_col = (byte)(Textures.AllTextures[pixel_idx + 2] * shade);
+
+                        int argb_col = (255 << 24) | (r_col << 16) | (g_col << 8) | b_col;
+
+                        for (int w = 0; w < (int)lineWidth + 1; w++)
+                        {
+                            int finalX = screenXStart + w;
+                            if (finalX < WINDOW_WIDTH)
+                            {
+                                screenPtr[y * WINDOW_WIDTH + finalX] = argb_col;
+                            }
+                        }
+
+                        ty_curr += ty_step;
+                    }
+
+                    rayAngle += (FOV / (float)RAYCASTER_RESOLUTION) * DEG_IN_RAD;
                 }
             }
+
+            screenBuffer.UnlockBits(bmpData);
+            g.DrawImage(screenBuffer, 0, 0);
         }
     }
 }

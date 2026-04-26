@@ -9,11 +9,11 @@ namespace ShooterGame
     public static class Player
     {
         // ZA KRETANJE I POZICIJU
-        public static double x;
-        public static double y;
+        public static float x;
+        public static float y;
 
-        public static int width = 4;
-        public static int height = 4;
+        public static int width = 6;
+        public static int height = 6;
 
         public static Rectangle hitbox;
 
@@ -23,24 +23,24 @@ namespace ShooterGame
         public static bool right = false;
 
         // Vektori za smjer kretanja (Movement Direction Vectors)
-        private static double moveDirX = 0; // -1 lijevo, 0 stoji, 1 desno
-        private static double moveDirY = 0; // -1 gore, 0 stoji, 1 dole
+        private static float moveDirX = 0; // -1 lijevo, 0 stoji, 1 desno
+        private static float moveDirY = 0; // -1 gore, 0 stoji, 1 dole
 
         // vektori za brzinu
-        private static double xVel = 0;
-        private static double yVel = 0;
+        private static float xVel = 0;
+        private static float yVel = 0;
 
-        public static double acceleration = 255; // ubrzanje
-        public static double friction = 20;     // trenje (usporava)
-        public static double terminalVel = 100;  // maksimalna brzina
+        public static float acceleration = 127f; // ubrzanje
+        public static float friction = 20f;     // trenje (usporava)
+        public static float terminalVel = 60f;  // maksimalna brzina
 
         // ZA ROTIRANJE
 
-        public static double angle; // ugao u radijanima, 0 - desno
+        public static float angle; // ugao u radijanima, 0 - desno
 
         // Vektori za smjer igraca (Player Direction Vectors)
-        public static double dirX;
-        public static double dirY;
+        public static float dirX;
+        public static float dirY;
 
         public static bool camLeft = false;
         public static bool camRight = false;
@@ -49,11 +49,11 @@ namespace ShooterGame
         {
             // 3D movement sistem
 
-            double fwdX  = Math.Cos(angle);
-            double fwdY  = Math.Sin(angle);
+            float fwdX = (float)Math.Cos(angle);
+            float fwdY = (float)Math.Sin(angle);
 
-            double sideX =  fwdY;
-            double sideY = -fwdX;
+            float sideX = fwdY;
+            float sideY = -fwdX;
 
             moveDirX = 0;
             moveDirY = 0;
@@ -63,7 +63,7 @@ namespace ShooterGame
             if (left)  { moveDirY += sideY; moveDirX += sideX; }
             if (right) { moveDirY -= sideY; moveDirX -= sideX; }
 
-            double directionVector = Math.Sqrt(moveDirX * moveDirX + moveDirY * moveDirY); // vektorski zbir vektora smjera x i y
+            float directionVector = (float)Math.Sqrt(moveDirX * moveDirX + moveDirY * moveDirY); // vektorski zbir vektora smjera x i y
             if (directionVector > 0)
             {
                 moveDirX /= directionVector;
@@ -76,15 +76,15 @@ namespace ShooterGame
             if (moveDirX == 0) xVel -= xVel * friction * GameForm.deltaTime;
             if (moveDirY == 0) yVel -= yVel * friction * GameForm.deltaTime;
 
-            double velocityVector = Math.Sqrt(xVel * xVel + yVel * yVel); // vektorski zbir brzina po x i y osi
+            float velocityVector = (float)Math.Sqrt(xVel * xVel + yVel * yVel); // vektorski zbir brzina po x i y osi
             if (velocityVector > terminalVel)
             {
                 xVel = xVel / velocityVector * terminalVel;
                 yVel = yVel / velocityVector * terminalVel;
             }
 
-            Player.xVel *= Math.Abs(GameControls.xAxis);
-            Player.yVel *= Math.Abs(GameControls.yAxis);
+            Player.xVel *= (float)Math.Abs(GameControls.xAxis);
+            Player.yVel *= (float)Math.Abs(GameControls.yAxis);
 
             x += xVel * GameForm.deltaTime;
             HandleCollisionsX();
@@ -95,14 +95,14 @@ namespace ShooterGame
 
         public static void HandleRotation()
         {
-            if (camLeft) angle -= 0.01;
-            if (camRight) angle += 0.01;
+            if (camLeft)  angle -= 2.5f * GameForm.deltaTime;
+            if (camRight) angle += 2.5f * GameForm.deltaTime;
+            
+            if (angle > 2 * Math.PI) angle -= 2f * (float)Math.PI;
+            if (angle < 0)           angle += 2f * (float)Math.PI;
 
-            if (angle > 2 * Math.PI) angle -= 2 * Math.PI;
-            if (angle < 0) angle += 2 * Math.PI;
-
-            dirX = x + 24 * Math.Cos(angle);
-            dirY = y + 24 * Math.Sin(angle);
+            dirX = x + 24f * (float)Math.Cos(angle);
+            dirY = y + 24f * (float)Math.Sin(angle);
         }
 
         private static void UpdateHitbox()
