@@ -15,10 +15,10 @@ namespace ShooterGame
         public byte[,] mapF;
         public byte[,] mapC;
 
-        private Dictionary<string, ZoneData> zones = new Dictionary<string, ZoneData>()
+        private Dictionary<string, ZoneData> zoneTypes = new Dictionary<string, ZoneData>()
         {
             {"room_grass_sky", new ZoneData(0, 2, 1)},
-            {"wall_sponge", new ZoneData(3, 1, 1)}
+            {"wall_sponge",    new ZoneData(3, 1, 1)}
         };
 
         public List<Rectangle> collisionRects;
@@ -46,7 +46,6 @@ namespace ShooterGame
             mapF = new byte[40, 30];
             mapC = new byte[40, 30];
 
-
             // set na neke default vrijednosti
             for (int i = 0; i < 40; i ++)
             {
@@ -63,39 +62,51 @@ namespace ShooterGame
         {
             base.OnLoad(e);
 
-            List<Label> walls = new List<Label>();
+            List<Label> zones = new List<Label>();
             collisionRects.Clear();
 
-            foreach (Label wall in this.Controls)
+            foreach (Label zone in this.Controls)
             {
-                if (wall.Tag.ToString().ToLower() == "wall")
+                if (zone.Tag != null)
                 {
-                    int startX = (int)(Math.Round(wall.Left / 20.0));
-                    int endX = (int)(Math.Round(wall.Right / 20.0));
-                    int startY = (int)(Math.Round(wall.Top / 20.0));
-                    int endY = (int)(Math.Round(wall.Bottom / 20.0));
+                    string tagKey = zone.Tag.ToString().ToLower();
 
-                    walls.Add(wall);
-                    for (int i = startX; i < endX; i++)
+                    if (zoneTypes.ContainsKey(tagKey))
                     {
-                        for (int j = startY; j < endY; j++)
-                        {
-                            if (i >= 40 || j >= 30 || i < 0 || j < 0) continue;
+                        ZoneData data = zoneTypes[tagKey];
 
-                            mapW[i, j] = 1;
-                            collisionRects.Add(new Rectangle(20 * i, 20 * j, 20, 20));
+                        int startX = (int)(Math.Round(zone.Left / 20.0));
+                        int endX = (int)(Math.Round(zone.Right / 20.0));
+                        int startY = (int)(Math.Round(zone.Top / 20.0));
+                        int endY = (int)(Math.Round(zone.Bottom / 20.0));
+
+                        zones.Add(zone);
+                        for (int i = startX; i < endX; i++)
+                        {
+                            for (int j = startY; j < endY; j++)
+                            {
+                                if (i >= 40 || j >= 30 || i < 0 || j < 0) continue;
+
+                                if (data.WallID != 0)
+                                {
+                                    mapW[i, j] = data.WallID;
+                                    collisionRects.Add(new Rectangle(20 * i, 20 * j, 20, 20));
+                                }
+
+                                mapF[i, j] = data.FloorID;
+                                mapC[i, j] = data.CeilID;
+                            }
                         }
                     }
-                    
                 }
             }
 
-            foreach (Label wall in walls)
+            foreach (Label zone in zones)
             {
-                wall.Hide();
-                this.Controls.Remove(wall);
-                this.Invalidate();
+                zone.Hide();
+                this.Controls.Remove(zone);
             }
+            this.Invalidate();
         }
 
         protected override void OnPaint(PaintEventArgs e)

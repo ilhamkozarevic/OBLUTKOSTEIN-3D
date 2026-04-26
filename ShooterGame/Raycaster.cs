@@ -22,8 +22,7 @@ namespace ShooterGame
         private const int TEX_W = 32;
         private const int TEX_H = 32;
 
-        private const int RAYCASTER_RESOLUTION = 800
-            ;
+        private const int RAYCASTER_RESOLUTION = 400;
 
         private static Color wallColor = Color.Orange;
         private static Color floorColor = Color.Gray;
@@ -51,7 +50,7 @@ namespace ShooterGame
             {
                 // pointer na poziciju 0, 0 u bufferu
                 int* screenPtr = (int*)bmpData.Scan0.ToPointer();
-
+                /*
                 for (int y = 0; y < WINDOW_HEIGHT; y++)
                 {
                     // offset za citav red (pristupamo screenPtr kao 1D nizu)
@@ -64,7 +63,7 @@ namespace ShooterGame
                         // memorijska lokacija [x + rowOffset] u bufferu sprema boju
                         screenPtr[x + rowOffset] = color; 
                     }
-                }
+                }*/
 
                 for (int r = 0; r < RAYCASTER_RESOLUTION; r++)
                 {
@@ -85,6 +84,14 @@ namespace ShooterGame
                     float vDist = float.MaxValue;
 
                     double rDist = double.MaxValue; // ray distance
+
+                    // finalne vrijednosti gdje zraka udari
+                    int hitMapX = 0;
+                    int hitMapY = 0;
+
+                    // vrijednosti gdje zraka udari
+                    int hMapX = 0, hMapY = 0;
+                    int vMapX = 0, vMapY = 0;
 
                     // --- HORIZONTALNA KOMPOMENTA ---
                     if (Math.Abs(sinA) > 0.0001)
@@ -116,7 +123,7 @@ namespace ShooterGame
                             // ako zraka izadje izvan mape prekida se petlja
                             if (mapX < 0 || mapX >= MAP_WIDTH || mapY < 0 || mapY >= MAP_HEIGHT) break;
 
-                            if (GameForm.currentLevel.mapW[mapX, mapY] == 1) // ako je pronadjen zid
+                            if (GameForm.currentLevel.mapW[mapX, mapY] > 0) // ako je pronadjen zid
                             {
                                 hRayX = rayX;
                                 hRayY = rayY;
@@ -124,6 +131,8 @@ namespace ShooterGame
                                 double hRayDx = hRayX - px;
                                 double hRayDy = hRayY - py;
 
+                                hMapX = mapX;
+                                hMapY = mapY;
                                 hDist = (float)Math.Sqrt((hRayDx * hRayDx) + (hRayDy * hRayDy)); // formula za udaljenost od koord. pocetka
 
                                 break;
@@ -165,13 +174,16 @@ namespace ShooterGame
                             // ako zraka izadje izvan mape prekida se petlja
                             if (mapX < 0 || mapX >= MAP_WIDTH || mapY < 0 || mapY >= MAP_HEIGHT) break;
 
-                            if (GameForm.currentLevel.mapW[mapX, mapY] == 1) // ako je pronadjen zid
+                            if (GameForm.currentLevel.mapW[mapX, mapY] > 0) // ako je pronadjen zid
                             {
                                 vRayX = rayX;
                                 vRayY = rayY;
 
                                 double vRayDx = vRayX - px;
                                 double vRayDy = vRayY - py;
+
+                                vMapX = mapX;
+                                vMapY = mapY;
 
                                 vDist = (float)Math.Sqrt((vRayDx * vRayDx) + (vRayDy * vRayDy)); // formula za udaljenost od koord. pocetka
 
@@ -188,25 +200,31 @@ namespace ShooterGame
                     if (hDist < vDist)
                     {
                         rDist = hDist;
+                        hitMapX = hMapX;
+                        hitMapY = hMapY;
                         tx = hRayX % TILE_SIZE; // udari horizontalnu osu pa je X i ogranici na tile size
                         if (sinA > 0) tx = TILE_SIZE - tx;
                     }
                     else
                     {
                         rDist = vDist;
+                        hitMapX = vMapX;
+                        hitMapY = vMapY;
                         tx = vRayY % TILE_SIZE; // udari vertikalnu osu pa je Y i ogranici na tile size
                         if (cosA < 0) tx = TILE_SIZE - tx;
                     }
 
                     // fisheye fix
-                    rDist *= Math.Cos(rayAngle - Player.angle);
+                    float raFix = (float)Math.Cos(rayAngle - Player.angle);
+                    rDist *= raFix;
+
+                    // -- CRTANJE ZIDOVA --
 
                     // visina jednog isjecka slike
                     double lineHeight = (TILE_SIZE * WINDOW_HEIGHT) / rDist;
-
                     double lineOffset = (WINDOW_HEIGHT / 2) - (lineHeight / 2);
 
-                    float tx_idx  = (tx / TILE_SIZE) * TEX_W;
+                    float tx_idx_wall  = (tx / TILE_SIZE) * TEX_W;
 
                     double ty_step = (TEX_H / lineHeight);
                     double ty_curr = 0;
@@ -224,32 +242,103 @@ namespace ShooterGame
                     float lineWidth = (float)(WINDOW_WIDTH) / RAYCASTER_RESOLUTION;
                     int screenXStart = (int)(r * lineWidth);
 
+                    int wallID = GameForm.currentLevel.mapW[hitMapX, hitMapY];
+                    int texOffset = (wallID - 1) * 3072;
+
                     for (int y = drawStart; y < drawEnd; y++)
                     {
                         int ty_idx = (int)ty_curr & 31; // osigura da ne predje 32, teksture su 0-31
-                        tx_idx = (int)tx_idx & (TEX_W - 1);
+                        tx_idx_wall = (int)tx_idx_wall & (TEX_W - 1);
 
                         // indeksiranje prema nizu za teksture (3 bajta za svaki piksel)
-                        int pixel_idx = (ty_idx * 32 + (int)tx_idx) * 3 + 3072 * 2;
+                        int pixel_idx = (ty_idx * 32 + (int)tx_idx_wall) * 3 + texOffset;
 
                         // simulacija osvjetljenja zatamnjenem naleglih zidova
                         float shade = (hDist < vDist) ? 1.0f : 0.8f;
-                        byte r_col = (byte)(Textures.AllTextures[pixel_idx + 0] * shade);
-                        byte g_col = (byte)(Textures.AllTextures[pixel_idx + 1] * shade);
-                        byte b_col = (byte)(Textures.AllTextures[pixel_idx + 2] * shade);
+                        byte wall_r = (byte)(Textures.AllTextures[pixel_idx + 0] * shade);
+                        byte wall_g = (byte)(Textures.AllTextures[pixel_idx + 1] * shade);
+                        byte wall_b = (byte)(Textures.AllTextures[pixel_idx + 2] * shade);
 
-                        int argb_col = (255 << 24) | (r_col << 16) | (g_col << 8) | b_col;
+                        int wall_argb = (255 << 24) | (wall_r << 16) | (wall_g << 8) | wall_b;
 
                         for (int w = 0; w < (int)lineWidth + 1; w++)
                         {
                             int finalX = screenXStart + w;
                             if (finalX < WINDOW_WIDTH)
                             {
-                                screenPtr[y * WINDOW_WIDTH + finalX] = argb_col;
+                                screenPtr[y * WINDOW_WIDTH + finalX] = wall_argb;
                             }
                         }
 
                         ty_curr += ty_step;
+                    }
+
+                    // -- CRTANJE PODA I KROVA -- 
+
+                    for (int y = drawEnd; y < WINDOW_HEIGHT; y++)
+                    {
+                        // udaljenost od horizonta
+                        float dy = y - (WINDOW_HEIGHT / 2.0f);
+
+                        // udaljenost piksela koji treba da se nacrta za pod
+                        float straightDist = WINDOW_HEIGHT * (TILE_SIZE / 2.0f) / dy;
+                        float dist = straightDist / raFix; // fisheye fix
+
+                        // koordinate piksela za pod
+                        float floorX = px + cosA * dist;
+                        float floorY = py + sinA * dist;
+
+                        // mapiranje koordinata piksela na teksture 0-31
+                        int tx_idx = (int)((floorX / TILE_SIZE) * TEX_W) & (TEX_W - 1);
+                        int ty_idx = (int)((floorY / TILE_SIZE) * TEX_H) & (TEX_H - 1);
+
+                        // mapiranje koordinata prema matrici levela
+                        int mapX = (int)(floorX / TILE_SIZE);
+                        int mapY = (int)(floorY / TILE_SIZE);
+
+                        // ogranicavanje koordinata da se ne bi desio index out of bounds
+                        if (mapX < 0) mapX = 0; if (mapX >= MAP_WIDTH) mapX = MAP_WIDTH - 1;
+                        if (mapY < 0) mapY = 0; if (mapY >= MAP_HEIGHT) mapY = MAP_HEIGHT - 1;
+
+                        // uzima ID teksture za pod
+                        int floorID = GameForm.currentLevel.mapF[mapX, mapY];
+                        int floorTexOffset = (floorID - 1) * 3072;
+                        if (floorTexOffset < 0) floorTexOffset = 0;
+
+                        // sprema indeks potrebnog piksela u bufferu
+                        int floor_pixel_idx = (ty_idx * TEX_W + tx_idx) * 3 + floorTexOffset;
+
+                        byte floor_r = Textures.AllTextures[floor_pixel_idx + 0];
+                        byte floor_g = Textures.AllTextures[floor_pixel_idx + 1];
+                        byte floor_b = Textures.AllTextures[floor_pixel_idx + 2];
+
+                        int floor_argb = (255 << 24) | (floor_r << 16) | (floor_g << 8) | floor_b;
+
+                        // za krov
+
+                        int ceilID = GameForm.currentLevel.mapC[mapX, mapY];
+                        int ceilTexOffset = (ceilID - 1) * 3072;
+                        if (ceilTexOffset < 0) ceilTexOffset = 0;
+
+                        int ceil_pixel_idx = (ty_idx * 32 + tx_idx) * 3 + ceilTexOffset;
+
+                        byte ceil_r = (byte)(Textures.AllTextures[ceil_pixel_idx + 0]);
+                        byte ceil_g = (byte)(Textures.AllTextures[ceil_pixel_idx + 1]);
+                        byte ceil_b = (byte)(Textures.AllTextures[ceil_pixel_idx + 2]);
+
+                        int ceil_argb = (255 << 24) | (ceil_r << 16) | (ceil_g << 8) | ceil_b;
+
+                        for (int w = 0; w < (int)lineWidth + 1; w++)
+                        {
+                            int finalX = screenXStart + w;
+                            if (finalX < WINDOW_WIDTH)
+                            {
+                                screenPtr[y * WINDOW_WIDTH + finalX] = floor_argb;
+
+                                int ceilY = WINDOW_HEIGHT - y - 1;
+                                screenPtr[ceilY * WINDOW_WIDTH + finalX] = ceil_argb;
+                            }
+                        }
                     }
 
                     rayAngle += (FOV / (float)RAYCASTER_RESOLUTION) * DEG_IN_RAD;
