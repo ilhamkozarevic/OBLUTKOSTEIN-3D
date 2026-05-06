@@ -52,7 +52,7 @@ namespace ShooterGame
                 int* screenPtr = (int*)bmpData.Scan0.ToPointer();
 
                 fixed (byte* texPtr = Textures.AllTextures) // gleda teksture preko pointera da bude brze
-                fixed (byte* gunTexPtr = Textures.gunTexture)
+                fixed (byte* gunPtr = Textures.gunTexture)
                 {
                     for (int r = 0; r < RAYCASTER_RESOLUTION; r++)
                     {
@@ -325,6 +325,43 @@ namespace ShooterGame
                     }
 
                     // GUN TEXTURING GOES HERE
+                    int baseGunY = WINDOW_HEIGHT - 32 * 4 + 3;
+                    int baseGunX = WINDOW_WIDTH / 2 - 16 * 4;
+                    
+                    if (Player.up || Player.down || Player.left || Player.right)
+                    {
+                        float bobSpeed = (int)(GameForm.stopwatch.ElapsedMilliseconds * 0.015f);
+                        Console.WriteLine(Player.velocityVector);
+                        baseGunX += (int)(Math.Sin(bobSpeed) * 8);
+                        baseGunY -= (int)(Math.Abs(Math.Cos(bobSpeed) * 1));
+                    }
+                    
+                    for (int gy = 0; gy < 32; gy++)
+                    {
+                        for (int gx = 0; gx < 32; gx++)
+                        {
+                            int gIdx = (gy * 32 + gx) * 3;
+
+                            byte gun_r = (byte)(gunPtr[gIdx + 0]);
+                            byte gun_g = (byte)(gunPtr[gIdx + 1]);
+                            byte gun_b = (byte)(gunPtr[gIdx + 2]);
+
+                            if (gun_r == 255 && gun_g == 0 && gun_b == 255) continue;
+
+                            int gun_argb = (255 << 24) | (gun_r << 16) | (gun_g << 8) | gun_b;
+
+                            for (int i = 0; i < 4; i++)
+                            {
+                                for (int j = 0; j < 4; j++)
+                                {
+                                    int gunX = (baseGunY + gy * 4 - i);
+                                    int gunY = (gx * 4 - j + baseGunX);
+
+                                    screenPtr[(gunX * WINDOW_WIDTH) + gunY] = gun_argb;
+                                }
+                            }
+                        }
+                    }
                 }
             }
 

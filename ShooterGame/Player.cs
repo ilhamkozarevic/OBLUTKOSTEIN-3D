@@ -29,6 +29,7 @@ namespace ShooterGame
         // vektori za brzinu
         private static float xVel = 0;
         private static float yVel = 0;
+        public static float velocityVector = 0;
 
         public static float acceleration = 127f; // ubrzanje
         public static float friction = 20f;     // trenje (usporava)
@@ -76,7 +77,7 @@ namespace ShooterGame
             if (moveDirX == 0) xVel -= xVel * friction * GameForm.deltaTime;
             if (moveDirY == 0) yVel -= yVel * friction * GameForm.deltaTime;
 
-            float velocityVector = (float)Math.Sqrt(xVel * xVel + yVel * yVel); // vektorski zbir brzina po x i y osi
+            velocityVector = (float)Math.Sqrt(xVel * xVel + yVel * yVel); // vektorski zbir brzina po x i y osi
             if (velocityVector > terminalVel)
             {
                 xVel = xVel / velocityVector * terminalVel;

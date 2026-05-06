@@ -13,7 +13,7 @@ namespace ShooterGame
     public partial class GameForm : Form
     {
         // Za delta time
-        private Stopwatch stopwatch;
+        public static Stopwatch stopwatch;
         public static float deltaTime;
         private long lastTime;
 
