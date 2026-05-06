@@ -18,3 +18,13 @@ C:\Users\Samed\Documents\Visual Studio 2008\Projects\ShooterGame\ShooterGame\obj
 C:\Users\Samed\Documents\Visual Studio 2008\Projects\ShooterGame\ShooterGame\obj\Debug\ShooterGame.Level1.resources
 C:\Users\Samed\Documents\Visual Studio 2008\Projects\ShooterGame\ShooterGame\obj\Debug\ShooterGame.Properties.Resources.resources
 C:\Users\Samed\Documents\Visual Studio 2008\Projects\ShooterGame\ShooterGame\obj\Debug\ShooterGame.csproj.GenerateResource.Cache
+C:\Users\PC07\Desktop\OBLUTKOSTEIN-3D-samedova-grana\OBLUTKOSTEIN-3D-samedova-grana\ShooterGame\obj\Debug\ShooterGame.exe
+C:\Users\PC07\Desktop\OBLUTKOSTEIN-3D-samedova-grana\OBLUTKOSTEIN-3D-samedova-grana\ShooterGame\obj\Debug\ShooterGame.pdb
+C:\Users\PC07\Desktop\OBLUTKOSTEIN-3D-samedova-grana\OBLUTKOSTEIN-3D-samedova-grana\ShooterGame\bin\Debug\ShooterGame.exe
+C:\Users\PC07\Desktop\OBLUTKOSTEIN-3D-samedova-grana\OBLUTKOSTEIN-3D-samedova-grana\ShooterGame\bin\Debug\ShooterGame.pdb
+C:\Users\PC07\Desktop\OBLUTKOSTEIN-3D-samedova-grana\OBLUTKOSTEIN-3D-samedova-grana\ShooterGame\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\PC07\Desktop\OBLUTKOSTEIN-3D-samedova-grana\OBLUTKOSTEIN-3D-samedova-grana\ShooterGame\obj\Debug\ShooterGame.GameForm.resources
+C:\Users\PC07\Desktop\OBLUTKOSTEIN-3D-samedova-grana\OBLUTKOSTEIN-3D-samedova-grana\ShooterGame\obj\Debug\ShooterGame.Level.resources
+C:\Users\PC07\Desktop\OBLUTKOSTEIN-3D-samedova-grana\OBLUTKOSTEIN-3D-samedova-grana\ShooterGame\obj\Debug\ShooterGame.Level1.resources
+C:\Users\PC07\Desktop\OBLUTKOSTEIN-3D-samedova-grana\OBLUTKOSTEIN-3D-samedova-grana\ShooterGame\obj\Debug\ShooterGame.Properties.Resources.resources
+C:\Users\PC07\Desktop\OBLUTKOSTEIN-3D-samedova-grana\OBLUTKOSTEIN-3D-samedova-grana\ShooterGame\obj\Debug\ShooterGame.csproj.GenerateResource.Cache

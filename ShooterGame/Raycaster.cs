@@ -11,22 +11,18 @@ namespace ShooterGame
     {
         public static int FOV = 60;
 
-        private const int WINDOW_WIDTH  = 800;
-        private const int WINDOW_HEIGHT = 600;
+        public const int WINDOW_WIDTH  = 800;
+        public const int WINDOW_HEIGHT = 600;
 
-        private const int TILE_SIZE  = 20;
-        private const int MAP_WIDTH  = 40;
-        private const int MAP_HEIGHT = 30;
-        private const int MAX_DOF    = 64;
+        public const int TILE_SIZE  = 20;
+        public const int MAP_WIDTH  = 40;
+        public const int MAP_HEIGHT = 30;
+        public const int MAX_DOF    = 64;
 
         private const int TEX_W = 32;
         private const int TEX_H = 32;
 
         private const int RAYCASTER_RESOLUTION = 400;
-
-        private static Color wallColor = Color.Orange;
-        private static Color floorColor = Color.Gray;
-        private static Color ceilColor = Color.DarkGray;
 
         private const float TWO_PI =  (float)Math.PI * 2;
         private const float DEG_IN_RAD = 0.0174532925f; // vrijednost 1 stepena u radijanima
@@ -45,6 +41,8 @@ namespace ShooterGame
 
             BitmapData bmpData = screenBuffer.LockBits(rect, ImageLockMode.WriteOnly, screenBuffer.PixelFormat);
 
+            float rayX, rayY, xOffset, yOffset;
+
             float px = Player.x;
             float py = Player.y;
 
@@ -54,6 +52,7 @@ namespace ShooterGame
                 int* screenPtr = (int*)bmpData.Scan0.ToPointer();
 
                 fixed (byte* texPtr = Textures.AllTextures) // gleda teksture preko pointera da bude brze
+                fixed (byte* gunTexPtr = Textures.gunTexture)
                 {
                     for (int r = 0; r < RAYCASTER_RESOLUTION; r++)
                     {
@@ -86,8 +85,6 @@ namespace ShooterGame
                         // --- HORIZONTALNA KOMPOMENTA ---
                         if (Math.Abs(sinA) > 0.0001)
                         {
-                            float rayX, rayY, xOffset, yOffset;
-
                             if (sinA > 0) // ugao od 0 do pi - gleda gore
                             {
                                 rayY = (float)Math.Floor(py / TILE_SIZE) * TILE_SIZE + TILE_SIZE;
@@ -137,8 +134,6 @@ namespace ShooterGame
 
                         if (Math.Abs(cosA) > 0.0001)
                         {
-                            float rayX, rayY, xOffset, yOffset;
-
                             if (cosA > 0) // ugao od 0 do pi - gleda desno
                             {
                                 rayX = (float)Math.Floor(px / TILE_SIZE) * TILE_SIZE + TILE_SIZE;
@@ -244,7 +239,7 @@ namespace ShooterGame
                             int pixel_idx = (ty_idx * 32 + (int)tx_idx_wall) * 3 + texOffset;
 
                             // simulacija osvjetljenja zatamnjenem naleglih zidova
-                            float shade = (hDist < vDist) ? 1.0f : 0.8f;
+                            float shade = (hDist < vDist) ? 1.0f : 0.7f;
                             byte wall_r = (byte)(texPtr[pixel_idx + 0] * shade);
                             byte wall_g = (byte)(texPtr[pixel_idx + 1] * shade);
                             byte wall_b = (byte)(texPtr[pixel_idx + 2] * shade);
@@ -328,11 +323,43 @@ namespace ShooterGame
 
                         rayAngle += (FOV / (float)RAYCASTER_RESOLUTION) * DEG_IN_RAD;
                     }
+
+                    // GUN TEXTURING GOES HERE
                 }
-                }
+            }
 
             screenBuffer.UnlockBits(bmpData);
             g.DrawImage(screenBuffer, 0, 0);
+        }
+
+        public static void InteractWith(byte[,] map)
+        {
+            float reach = 24.0f;
+
+            // provjerava x i y poziciju gdje igrac gleda pomaknutu za reach piksela
+            float checkX = Player.x + (float)Math.Cos(Player.angle) * reach;
+            float checkY = Player.y + (float)Math.Sin(Player.angle) * reach;
+
+            int mapX = (int)(checkX / TILE_SIZE);
+            int mapY = (int)(checkY / TILE_SIZE);
+
+            if (mapX >= 0 && mapX < MAP_WIDTH && mapY >= 0 && mapY < MAP_HEIGHT)
+            {
+                if (map[mapX, mapY] == 4)
+                {
+                    map[mapX, mapY] = 0;
+
+                    // racunanje koordinata gdje se nalazi rectangle za collision
+                    int targetX = mapX * TILE_SIZE;
+                    int targetY = mapY * TILE_SIZE;
+
+                    // predicate funkcija iz funkcionalnog programiranja prima jedan ili vise ulaza i vraca bool
+                    Predicate<Rectangle> match = (rect) => (rect.X == targetX && rect.Y == targetY);
+
+                    // ova funkcija prima predicate funkciju i removea svaki rectangle gdje predicate match vraca true
+                    GameForm.currentLevel.collisionRects.RemoveAll(match); 
+                }
+            }
         }
 
         public static void PrecalculateDistanceTable() // ovo izracuna svaku mogucu distancu za floor da sacuva performanse

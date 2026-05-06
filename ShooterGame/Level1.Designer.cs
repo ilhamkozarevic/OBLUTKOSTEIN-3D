@@ -33,6 +33,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // wall1
@@ -81,10 +83,30 @@
             this.label3.Tag = "room_grass_sky";
             this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
+            // label5
+            // 
+            this.label5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label5.Location = new System.Drawing.Point(511, 274);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(22, 23);
+            this.label5.TabIndex = 12;
+            this.label5.Tag = "wood_door";
+            // 
+            // label6
+            // 
+            this.label6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label6.Location = new System.Drawing.Point(46, 78);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(232, 194);
+            this.label6.TabIndex = 13;
+            this.label6.Tag = "wood_door";
+            // 
             // Level1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label4);
@@ -104,5 +126,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
     }
 }

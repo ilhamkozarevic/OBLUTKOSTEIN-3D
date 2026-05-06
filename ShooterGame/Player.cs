@@ -12,8 +12,8 @@ namespace ShooterGame
         public static float x;
         public static float y;
 
-        public static int width = 6;
-        public static int height = 6;
+        public const int width = 6;
+        public const int height = 6;
 
         public static Rectangle hitbox;
 
@@ -95,8 +95,8 @@ namespace ShooterGame
 
         public static void HandleRotation()
         {
-            if (camLeft)  angle -= 2.5f * GameForm.deltaTime;
-            if (camRight) angle += 2.5f * GameForm.deltaTime;
+            if (camLeft)  angle -= 2.5f * GameForm.deltaTime * GameControls.xCam;
+            if (camRight) angle += 2.5f * GameForm.deltaTime * GameControls.xCam;
             
             if (angle > 2 * Math.PI) angle -= 2f * (float)Math.PI;
             if (angle < 0)           angle += 2f * (float)Math.PI;

@@ -49,6 +49,8 @@ namespace ShooterGame
             stopwatch = Stopwatch.StartNew();
             Application.Idle += GameLoop;
             lastTime = stopwatch.ElapsedMilliseconds; // set last time to current time
+
+            //GameControls.InitController();
         }
 
         // GAME LOOP
@@ -72,8 +74,8 @@ namespace ShooterGame
 
             e.SuppressKeyPress = true;
 
-            GameControls.xAxis = 1.0;
-            GameControls.yAxis = 1.0;
+            GameControls.xAxis = 1.0f;
+            GameControls.yAxis = 1.0f;
             if (e.KeyCode == GameControls.moveUp) Player.up = true;
             if (e.KeyCode == GameControls.moveDown) Player.down = true;
             if (e.KeyCode == GameControls.moveLeft) Player.left = true;
@@ -94,6 +96,8 @@ namespace ShooterGame
 
             if (e.KeyCode == GameControls.camLeft) Player.camLeft = false;
             if (e.KeyCode == GameControls.camRight) Player.camRight = false;
+
+            if (e.KeyCode == GameControls.interactKey) Raycaster.InteractWith(currentLevel.mapW);
         }
 
         // LOAD NEW LEVEL
