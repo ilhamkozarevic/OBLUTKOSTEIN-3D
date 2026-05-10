@@ -16,58 +16,63 @@ namespace oblutkostein_3D
 
         int[] mapW = 
         {
-            3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-            3, 0, 0, 3, 0, 0, 0, 0, 0, 3,
-            3, 0, 0, 4, 0, 3, 0, 0, 0, 3,
-            3, 3, 4, 3, 0, 0, 0, 0, 0, 1,
-            3, 0, 0, 0, 0, 0, 0, 0, 0, 3,
-            3, 0, 0, 0, 0, 3, 0, 0, 0, 2,
-            3, 0, 0, 0, 0, 0, 0, 0, 0, 3,
-            3, 0, 0, 0, 0, 0, 0, 0, 0, 3,
-            3, 0, 0, 0, 0, 0, 0, 0, 0, 3,
-            3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+            7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+            7, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 7,
+            7, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 7,
+            7, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 7,
+            7, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 7,
+            7, 0, 0, 2, 0, 7, 0, 0, 0, 0, 0, 0, 7,
+            7, 7, 2, 7, 0, 0, 0, 0, 0, 0, 0, 0, 7,
+            7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7,
+            7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 7,
+            7, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 7,
+            7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7,
+            7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7,
+            7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
         };
 
         int[] mapF = 
         {
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-            3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-            3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2,
+            3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2,
+            3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
         };
 
         int[] mapC = 
         {
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
         };
 
-        int mapX = 10, mapY = 10, mapS = 64;
+        int mapX = 13, mapY = 13, mapS = 64;
         int xo, yo; // X i Y offset - dimenzije zidova
 
-        double playerX = 300, playerY = 300;
+        double playerX = 150, playerY = 150;
         int centerX, centerY;
 
         bool goUp, goDown, goLeft, goRight;
 
         double rotationSpeed = 4.0;
-        double speed = 100.0;
+        double speed = 120.0;
 
         double playerdX, playerdY, playerA = 0.0;
 
@@ -118,7 +123,7 @@ namespace oblutkostein_3D
 
         int viewWidth = 1024;
         int viewHeight = 512;
-        int numRays = 128;
+        int numRays = 256;
         double fov = 60 * (Math.PI / 180.0);
         double screenX;
 
@@ -130,7 +135,12 @@ namespace oblutkostein_3D
             public int x, y, z;  //position
             public double w, h;
             public int health;
+            public double hitTimer;
+            public double speed;
+            public double damageTimer;
         }
+
+        double enemyAttackRange = 45.0;
 
         sprite[] sp = new sprite[4];
 
@@ -155,6 +165,36 @@ namespace oblutkostein_3D
         SoundPlayer walkSound;
         bool isWalkingSoundPlaying = false;
         double walkTimer = 0;
+
+        SoundPlayer enemyHitSound;
+
+        // A* pathfinding za enemy-je
+        List<Point>[] enemyPaths = new List<Point>[4];
+        double[] pathUpdateTimers = new double[4];
+
+        public struct AStarNode
+        {
+            public int x, y;
+            public double g, f;
+            public int parentX, parentY;
+
+            public AStarNode(int x, int y, double g, double h, int px, int py)
+            {
+                this.x = x; this.y = y;
+                this.g = g; this.f = g + h;
+                this.parentX = px; this.parentY = py;
+            }
+        }
+
+        int playerHealth = 100;
+        double screenFlashTimer = 0;
+
+        int score = 0;
+        int currentRound = 0;
+        int enemiesToSpawn = 5;
+        float enemyBaseSpeed = 100;
+
+        bool isGameOver = false;
 
         public Form1()
         {
@@ -202,11 +242,81 @@ namespace oblutkostein_3D
 
             shootSound = new SoundPlayer(@"SoundEffects\shoot.wav");
             walkSound = new SoundPlayer(@"SoundEffects\walk.wav");
+            enemyHitSound = new SoundPlayer(@"SoundEffects\enemyHit.wav");
+
+            NextRound();
         }
 
-        //double degToRad(double a) { return a * Math.PI / 180.0; }
+        private double Heuristic(int x1, int y1, int x2, int y2)
+        {
+            double dx = x2 - x1, dy = y2 - y1;
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
 
-        //double FixAng(double a) { if (a > 360) { a -= 360; } if (a < 0) { a += 360; } return a; }
+        private List<Point> FindPath(int startX, int startY, int endX, int endY)
+        {
+            if (startX == endX && startY == endY) return new List<Point>();
+
+            var openList = new List<AStarNode>();
+            var visited = new Dictionary<int, AStarNode>();
+
+            openList.Add(new AStarNode(startX, startY, 0,
+                Heuristic(startX, startY, endX, endY), -1, -1));
+
+            int[] dx = { 0, 0, 1, -1, 1, 1, -1, -1 };
+            int[] dy = { 1, -1, 0, 0, 1, -1, 1, -1 };
+            double[] costs = { 1, 1, 1, 1, 1.414, 1.414, 1.414, 1.414 };
+
+            while (openList.Count > 0)
+            {
+                int bestIdx = 0;
+                for (int i = 1; i < openList.Count; i++)
+                    if (openList[i].f < openList[bestIdx].f) bestIdx = i;
+
+                var curr = openList[bestIdx];
+                openList.RemoveAt(bestIdx);
+
+                int key = curr.y * mapX + curr.x;
+                if (visited.ContainsKey(key)) continue;
+                visited[key] = curr;
+
+                if (curr.x == endX && curr.y == endY)
+                {
+                    var path = new List<Point>();
+                    int cx = curr.x, cy = curr.y;
+                    while (!(cx == startX && cy == startY))
+                    {
+                        path.Add(new Point(cx, cy));
+                        var node = visited[cy * mapX + cx];
+                        int px = node.parentX, py = node.parentY;
+                        cx = px; cy = py;
+                    }
+                    path.Reverse();
+                    return path;
+                }
+
+                for (int d = 0; d < 8; d++)
+                {
+                    int nx = curr.x + dx[d];
+                    int ny = curr.y + dy[d];
+
+                    if (nx < 0 || nx >= mapX || ny < 0 || ny >= mapY) continue;
+                    if (mapW[ny * mapX + nx] > 0) continue;
+
+                    if (d >= 4 && (mapW[curr.y * mapX + nx] > 0 ||
+                                   mapW[ny * mapX + curr.x] > 0)) continue;
+
+                    int nkey = ny * mapX + nx;
+                    if (visited.ContainsKey(nkey)) continue;
+
+                    double g = curr.g + costs[d];
+                    openList.Add(new AStarNode(nx, ny, g,
+                        Heuristic(nx, ny, endX, endY), curr.x, curr.y));
+                }
+            }
+
+            return null; // Nema puta
+        }
 
         private double distance(double ax, double ay, double bx, double by, double ang)
         {
@@ -249,8 +359,8 @@ namespace oblutkostein_3D
             if (ra < 0) ra += 2 * Math.PI;
             if (ra > 2 * Math.PI) ra -= 2 * Math.PI;
 
-            g.FillRectangle(Brushes.DarkSlateBlue, 0, 0, ClientRectangle.Width, ClientRectangle.Height / 2);
-            g.FillRectangle(Brushes.Black, 0, ClientRectangle.Height / 2, ClientRectangle.Width, ClientRectangle.Height);
+            g.FillRectangle(Brushes.DarkSlateGray, 0, 0, ClientRectangle.Width, ClientRectangle.Height / 2);
+            g.FillRectangle(Brushes.DimGray, 0, ClientRectangle.Height / 2, ClientRectangle.Width, ClientRectangle.Height);
             for (int r = 0; r < numRays; r++)
             {
                 vmt = 0;
@@ -284,9 +394,9 @@ namespace oblutkostein_3D
                 {
                     rx = playerX;
                     ry = playerY;
-                    dof = 8;
+                    dof = 20;
                 }
-                while (dof < 8)
+                while (dof < 20)
                 {
                     mx = (int)(rx / 64);
                     my = (int)(ry / 64);
@@ -299,7 +409,7 @@ namespace oblutkostein_3D
                         hx = rx;
                         hy = ry;
                         disH = distance(playerX, playerY, hx, hy, ra);
-                        dof = 8;
+                        dof = 20;
 
                     }
                     else
@@ -338,9 +448,9 @@ namespace oblutkostein_3D
                 {
                     rx = playerX;
                     ry = playerY;
-                    dof = 8;
+                    dof = 20;
                 }
-                while (dof < 8)
+                while (dof < 20)
                 {
                     mx = (int)(rx / 64);
                     my = (int)(ry / 64);
@@ -353,7 +463,7 @@ namespace oblutkostein_3D
                         vx = rx;
                         vy = ry;
                         disV = distance(playerX, playerY, vx, vy, ra);
-                        dof = 8;
+                        dof = 20;
                     }
                     else
                     {
@@ -445,7 +555,7 @@ namespace oblutkostein_3D
 
                     ty += ty_step;
                 }
-
+                /*
                 //-----CRTANJE PODA I KROVA-----
                 for (y = (int)(lineOff + lineH); y < viewHeight; y++)
                 {
@@ -488,7 +598,7 @@ namespace oblutkostein_3D
                     cetkaPodKrov.Color = Color.FromArgb(cR, cG, cB);
                     g.FillRectangle(cetkaPodKrov, (int)screenX, viewHeight - y, rayWidth, 1);
                 }
-
+                */
                 depth[r] = disT;
 
                 ra += fov / numRays;
@@ -497,67 +607,88 @@ namespace oblutkostein_3D
             }
 
             // --- CRTANJE SPRITE-OVA ---
-
-            double sx = sp[0].x - playerX;
-            double sy = sp[0].y - playerY;
-            double dist = Math.Sqrt(sx * sx + sy * sy);
-
-            double spriteAngle = Math.Atan2(sy, sx) - playerA;
-            while (spriteAngle <= -Math.PI) spriteAngle += 2 * Math.PI;
-            while (spriteAngle > Math.PI) spriteAngle -= 2 * Math.PI;
-
-            if (sp[0].state == 1 && dist > 10 && Math.Abs(spriteAngle) < (fov / 1.1))
+            for (int i = 0; i < sp.Length; i++)
             {
-                double baseSize = Math.Abs((mapS * viewHeight) / dist);
+                // Preskoči ako neprijatelj ne postoji ili je mrtav
+                if (sp[i].state == 0) continue;
 
-                double spriteWidth = baseSize * sp[0].w;
-                double spriteHeight = baseSize * sp[0].h;
+                double sx = sp[i].x - playerX;
+                double sy = sp[i].y - playerY;
+                double dist = Math.Sqrt(sx * sx + sy * sy);
 
-                double zOffset = (sp[0].z * viewHeight) / dist;
+                double spriteAngle = Math.Atan2(sy, sx) - playerA;
+                while (spriteAngle <= -Math.PI) spriteAngle += 2 * Math.PI;
+                while (spriteAngle > Math.PI) spriteAngle -= 2 * Math.PI;
 
-                double screenX_pos = (spriteAngle / fov) * viewWidth + (viewWidth / 2.0);
-                double screenY_pos = (viewHeight / 2.0) + zOffset;
-
-                int startX = (int)(screenX_pos - spriteWidth / 2);
-
-                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-                g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
-
-                for (int col = 0; col < 32; col++)
+                // Smanjio sam distancu sa 10 na 1 da ih vidiš i kad su blizu
+                if (dist > 1 && Math.Abs(spriteAngle) < (fov / 1.1))
                 {
-                    double xStartPrecise = startX + (col * spriteWidth / 32.0);
-                    double xEndPrecise = startX + ((col + 1) * spriteWidth / 32.0);
+                    // VAŽNO: Koristi 64.0 umjesto mapS ako su ti neprijatelji mali!
+                    double baseSize = Math.Abs((64.0 * viewHeight) / dist);
 
-                    int x1 = (int)Math.Floor(xStartPrecise);
-                    int x2 = (int)Math.Ceiling(xEndPrecise);
-                    int currentColumnWidth = (x2 - x1) + 1;
+                    double spriteWidth = baseSize * sp[i].w;
+                    double spriteHeight = baseSize * sp[i].h;
 
-                    if (x2 >= 0 && x1 < viewWidth)
+                    double zOffset = (sp[i].z * viewHeight) / dist;
+
+                    double screenX_pos = (spriteAngle / fov) * viewWidth + (viewWidth / 2.0);
+                    double screenY_pos = (viewHeight / 2.0) + zOffset;
+
+                    int startX = (int)(screenX_pos - spriteWidth / 2);
+
+                    g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+                    g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
+
+                    for (int col = 0; col < 32; col++)
                     {
-                        int checkX = Math.Max(0, Math.Min(viewWidth - 1, x1));
-                        int r = (checkX * numRays) / viewWidth;
+                        double xStartPrecise = startX + (col * spriteWidth / 32.0);
+                        double xEndPrecise = startX + ((col + 1) * spriteWidth / 32.0);
 
-                        if (dist < depth[r])
+                        int x1 = (int)Math.Floor(xStartPrecise);
+                        int x2 = (int)Math.Ceiling(xEndPrecise);
+                        int currentColumnWidth = (x2 - x1) + 1;
+
+                        if (x2 >= 0 && x1 < viewWidth)
                         {
-                            int spriteOffset = sp[0].map * 3072;
+                            int checkX = Math.Max(0, Math.Min(viewWidth - 1, x1));
+                            int r = (checkX * numRays) / viewWidth;
 
-                            using (Bitmap tempCol = new Bitmap(1, 32))
+                            if (dist < depth[r])
                             {
-                                for (int py = 0; py < 32; py++)
+                                int spriteOffset = sp[i].map * 3072;
+
+                                using (Bitmap tempCol = new Bitmap(1, 32))
                                 {
-                                    int pIdx = spriteOffset + (py * 32 + col) * 3;
-                                    Color c = Color.FromArgb(
-                                        Textures.SpriteTextures[pIdx],
-                                        Textures.SpriteTextures[pIdx + 1],
-                                        Textures.SpriteTextures[pIdx + 2]);
+                                    for (int py = 0; py < 32; py++)
+                                    {
+                                        int pIdx = spriteOffset + (py * 32 + col) * 3;
+                                        int rOriginal = Textures.SpriteTextures[pIdx];
+                                        int gOriginal = Textures.SpriteTextures[pIdx + 1];
+                                        int bOriginal = Textures.SpriteTextures[pIdx + 2];
 
-                                    if (c.R == 255 && c.G == 0 && c.B == 255)
-                                        tempCol.SetPixel(0, py, Color.Transparent);
-                                    else
-                                        tempCol.SetPixel(0, py, c);
+                                        if (rOriginal == 255 && gOriginal == 0 && bOriginal == 255)
+                                        {
+                                            tempCol.SetPixel(0, py, Color.Transparent);
+                                        }
+                                        else
+                                        {
+                                            Color finalColor;
+                                            if (sp[i].hitTimer > 0)
+                                            {
+                                                int rFlash = Math.Min(rOriginal + 100, 255);
+                                                int gFlash = (int)(gOriginal * 0.4);
+                                                int bFlash = (int)(bOriginal * 0.4);
+                                                finalColor = Color.FromArgb(rFlash, gFlash, bFlash);
+                                            }
+                                            else
+                                            {
+                                                finalColor = Color.FromArgb(rOriginal, gOriginal, bOriginal);
+                                            }
+                                            tempCol.SetPixel(0, py, finalColor);
+                                        }
+                                    }
+                                    g.DrawImage(tempCol, x1, (int)(screenY_pos - spriteHeight / 2), currentColumnWidth, (int)spriteHeight);
                                 }
-
-                                g.DrawImage(tempCol, x1, (int)(screenY_pos - spriteHeight / 2), currentColumnWidth, (int)spriteHeight);
                             }
                         }
                     }
@@ -616,33 +747,103 @@ namespace oblutkostein_3D
                 double bulletDist = Math.Sqrt(bX * bX + bY * bY);
 
                 double bulletRelativeAngle = Math.Atan2(bY, bX) - playerA;
-
                 while (bulletRelativeAngle <= -Math.PI) bulletRelativeAngle += 2 * Math.PI;
                 while (bulletRelativeAngle > Math.PI) bulletRelativeAngle -= 2 * Math.PI;
 
-                double fixbulletDistance = bulletDist * Math.Cos(bulletRelativeAngle);
-                if (fixbulletDistance < 0.1) fixbulletDistance = 0.1;
+                double fixDistance = bulletDist * Math.Cos(bulletRelativeAngle);
+                if (fixDistance < 0.1) continue; // Preskoči ako je preblizu ili iza
 
-                if (Math.Abs(bulletRelativeAngle) < (fov / 1.2))
+                if (Math.Abs(bulletRelativeAngle) < (fov / 2.0))
                 {
-                    double bulletSize = (8.0 * viewHeight) / fixbulletDistance;
-
-                    if (bulletSize > 40) bulletSize = 40;
+                    double bulletSize = (10.0 * viewHeight) / fixDistance;
                     if (bulletSize < 2) bulletSize = 2;
+                    if (bulletSize > 50) bulletSize = 40;
 
-                    double screenX_pos = (bulletRelativeAngle / fov) * viewWidth + (viewWidth / 2.0);
-                    double screenY_pos = (viewHeight / 2.0);
+                    int screenX = (int)((bulletRelativeAngle / fov) * viewWidth + (viewWidth / 2.0));
+                    int screenY = viewHeight / 2;
 
                     int bW = (int)bulletSize;
-                    int bH = (int)(bulletSize * 0.6);
+                    int bH = (int)(bulletSize * 0.5);
 
-                    g.FillEllipse(Brushes.White, (int)(screenX_pos - bW / 2), (int)(screenY_pos - bH / 2), bW, bH);
+                    g.FillEllipse(Brushes.OrangeRed, screenX - bW, screenY - bH, bW * 2, bH * 2);
 
-                    using (Pen glow = new Pen(Color.FromArgb(200, Color.Yellow), 2))
-                    {
-                        g.DrawEllipse(glow, (int)(screenX_pos - bW / 2), (int)(screenY_pos - bH / 2), bW, bH);
-                    }
+                    g.FillEllipse(Brushes.Yellow, screenX - bW / 2, screenY - bH / 2, bW, bH);
+
+                    g.FillEllipse(Brushes.White, screenX - bW / 4, screenY - bH / 4, bW / 2, bH / 2);
                 }
+            }
+
+            // CRTANJE HIT EFFEKTA
+            if (screenFlashTimer > 0)
+            {
+                using (SolidBrush redFlash = new SolidBrush(Color.FromArgb(100, 255, 0, 0)))
+                {
+                    g.FillRectangle(redFlash, 0, 0, viewWidth, viewHeight);
+                }
+            }
+
+            g.DrawString("HP: " + playerHealth, new Font("Arial", 16), Brushes.White, 10, 10);
+
+            g.DrawString("SCORE: " + score, new Font("Arial", 16, FontStyle.Bold), Brushes.Gold, 10, 40);
+            g.DrawString("ROUND: " + currentRound, new Font("Arial", 16, FontStyle.Bold), Brushes.LightBlue, 10, 70);
+
+            // UMRO SI
+            if (isGameOver)
+            {
+                using (SolidBrush overlay = new SolidBrush(Color.FromArgb(200, 0, 0, 0)))
+                {
+                    g.FillRectangle(overlay, 0, 0, viewWidth, viewHeight);
+                }
+
+                using (Font bigFont = new Font("Impact", 48, FontStyle.Bold))
+                {
+                    string text = "YOU DIED";
+                    Size textSize = TextRenderer.MeasureText(text, bigFont);
+                    g.DrawString(text, bigFont, Brushes.Red, (viewWidth - textSize.Width) / 2, (viewHeight / 2) - 50);
+                }
+
+                using (Font smallFont = new Font("Arial", 14, FontStyle.Regular))
+                {
+                    string scoreText = "Final Score: " + score;
+                    string restartText = "Press 'R' to Restart";
+
+                    g.DrawString(scoreText, smallFont, Brushes.White, (viewWidth - 150) / 2, (viewHeight / 2) + 40);
+                    g.DrawString(restartText, smallFont, Brushes.Gold, (viewWidth - 170) / 2, (viewHeight / 2) + 70);
+                }
+            }
+        }
+
+        void NextRound()
+        {
+            currentRound++;
+            enemiesToSpawn = 1 + currentRound;
+            float currentSpeed = enemyBaseSpeed + (currentRound * 10f); 
+
+            sp = new sprite[enemiesToSpawn];
+            enemyPaths = new List<Point>[enemiesToSpawn];
+            pathUpdateTimers = new double[enemiesToSpawn];
+
+            int[,] spawnPoints = {
+            { 1, 7 }, { 2, 7 }, { 1, 10 }, { 2, 10 },
+            { 4, 1 }, { 5, 1 }, { 6, 1 },  { 7, 1  },
+            { 8, 1 }, { 4, 7 }, { 5, 7 },  { 6, 7  }
+             };
+
+            for (int i = 0; i < enemiesToSpawn; i++)
+            {
+                sp[i] = new sprite();
+                sp[i].type = 1;
+                sp[i].state = 1;
+                sp[i].health = 3; 
+                sp[i].map = 0;
+                sp[i].w = 1.0;
+                sp[i].h = 1.0;
+                sp[i].z = 10;
+                sp[i].speed = currentSpeed;
+
+                int idx = i % spawnPoints.GetLength(0);
+                sp[i].x = spawnPoints[idx, 0] * 64 + 32;
+                sp[i].y = spawnPoints[idx, 1] * 64 + 32;
             }
         }
 
@@ -659,6 +860,15 @@ namespace oblutkostein_3D
 
         private void UpdateGame(double dt)
         {
+            if (isGameOver) return; 
+
+            if (playerHealth <= 0)
+            {
+                isGameOver = true;
+                walkSound.Stop();
+                return;
+            }
+
             isWalkingSoundPlaying = false;
 
             if (shootTimer > 0)
@@ -757,6 +967,30 @@ namespace oblutkostein_3D
             }
 
             UpdateBullets(dt);
+            UpdateEnemies(dt);
+
+            bool roundOver = true;
+
+            if (sp == null || sp.Length == 0)
+            {
+                roundOver = true;
+            }
+            else
+            {
+                for (int i = 0; i < sp.Length; i++)
+                {
+                    if (sp[i].state == 1)
+                    {
+                        roundOver = false;
+                        break;
+                    }
+                }
+            }
+
+            if (roundOver)
+            {
+                NextRound();
+            }
         }
 
         private void UpdateBullets(double dt)
@@ -788,12 +1022,21 @@ namespace oblutkostein_3D
 
                         if (distToEnemy < 30)
                         {
-                            sp[s].health -= 1; 
+                            enemyHitSound.Play();
+                            sp[s].health -= 1;
+                            sp[s].hitTimer = 0.15;
                             hitEnemy = true;
+
+                            double pushX = Math.Cos(b.angle) * 15;
+                            double pushY = Math.Sin(b.angle) * 15;
+
+                            if (mapW[(int)(sp[s].y / 64) * mapX + (int)((sp[s].x + pushX) / 64)] == 0) sp[s].x += (int)pushX;
+                            if (mapW[(int)((sp[s].y + pushY) / 64) * mapX + (int)(sp[s].x / 64)] == 0) sp[s].y += (int)pushY;
 
                             if (sp[s].health <= 0)
                             {
                                 sp[s].state = 0;
+                                score += 20;
                             }
                             break;
                         }
@@ -802,15 +1045,107 @@ namespace oblutkostein_3D
 
                 if (hitEnemy)
                 {
-                    bullets.RemoveAt(i); // Ukloni metak ako je pogodio neprijatelja
+                    bullets.RemoveAt(i);
                     continue;
                 }
 
-                // Ako ništa nije pogodio, nastavi kretanje metka
                 b.x = nextX;
                 b.y = nextY;
                 b.distanceTraveled += distStep;
                 bullets[i] = b;
+            }
+        }
+
+        private void UpdateEnemies(double dt)
+        {
+            int stopDistance = 35;
+
+            if (screenFlashTimer > 0) screenFlashTimer -= dt;
+
+            for (int i = 0; i < sp.Length; i++)
+            {
+                if (sp[i].state != 1 || sp[i].type != 1) continue;
+
+                double dx = sp[i].x - playerX;
+                double dy = sp[i].y - playerY;
+                double distToPlayer = Math.Sqrt(dx * dx + dy * dy);
+
+                if (distToPlayer < enemyAttackRange && sp[i].damageTimer <= 0)
+                {
+                    playerHealth -= 2;
+                    sp[i].damageTimer = 1.0; 
+                    screenFlashTimer = 0.2;
+                    if (playerHealth <= 0) playerHealth = 0;
+                }
+
+                if (sp[i].damageTimer > 0) sp[i].damageTimer -= dt;
+
+                if (sp[i].hitTimer > 0)
+                {
+                    sp[i].hitTimer -= dt;
+                }
+
+                pathUpdateTimers[i] -= dt;
+                if (pathUpdateTimers[i] <= 0)
+                {
+                    pathUpdateTimers[i] = 0.3;
+                    int ex = (int)(sp[i].x / 64);
+                    int ey = (int)(sp[i].y / 64);
+                    int px = (int)(playerX / 64);
+                    int py = (int)(playerY / 64);
+                    enemyPaths[i] = FindPath(ex, ey, px, py);
+                }
+
+                double moveX = 0, moveY = 0;
+
+                if (enemyPaths[i] != null && enemyPaths[i].Count > 0)
+                {
+                    Point nextCell = enemyPaths[i][0];
+                    double targetX = nextCell.X * 64 + 32;
+                    double targetY = nextCell.Y * 64 + 32;
+
+                    double wdx = targetX - sp[i].x;
+                    double wdy = targetY - sp[i].y;
+                    double wdist = Math.Sqrt(wdx * wdx + wdy * wdy);
+
+                    if (wdist < 10 && enemyPaths[i].Count > 1)
+                    {
+                        enemyPaths[i].RemoveAt(0);
+                        nextCell = enemyPaths[i][0];
+                        targetX = nextCell.X * 64 + 32;
+                        targetY = nextCell.Y * 64 + 32;
+                        wdx = targetX - sp[i].x;
+                        wdy = targetY - sp[i].y;
+                        wdist = Math.Sqrt(wdx * wdx + wdy * wdy);
+                    }
+
+                    if (wdist > 0)
+                    {
+                        moveX = (wdx / wdist) * sp[i].speed * dt;
+                        moveY = (wdy / wdist) * sp[i].speed * dt;
+                    }
+                }
+
+                if (distToPlayer > enemyAttackRange)
+                {
+                    if (moveX != 0 || moveY != 0)
+                    {
+                        int newX = sp[i].x + (int)moveX;
+                        int newY = sp[i].y + (int)moveY;
+
+                        int checkX = (moveX > 0) ? newX + stopDistance : newX - stopDistance;
+                        if (mapW[(sp[i].y / 64) * mapX + (checkX / 64)] == 0)
+                        {
+                            sp[i].x = newX;
+                        }
+
+                        int checkY = (moveY > 0) ? newY + stopDistance : newY - stopDistance;
+                        if (mapW[(checkY / 64) * mapX + (sp[i].x / 64)] == 0)
+                        {
+                            sp[i].y = newY;
+                        }
+                    }
+                }
             }
         }
 
@@ -833,7 +1168,7 @@ namespace oblutkostein_3D
 
                 ipy = (int)(playerY / 64.0);
                 ipy_add_yo = (int)((playerY + yo) / 64.0);
-                if (mapW[ipy_add_yo * mapX + ipx_add_xo] == 4) { mapW[ipy_add_yo * mapX + ipx_add_xo] = 0; }
+                if (mapW[ipy_add_yo * mapX + ipx_add_xo] == 2) { mapW[ipy_add_yo * mapX + ipx_add_xo] = 0; }
             }
 
             if (e.KeyCode == Keys.Q)
@@ -843,7 +1178,7 @@ namespace oblutkostein_3D
                     Bullet newBullet = new Bullet();
                     newBullet.active = true;
                     newBullet.angle = playerA;
-                    newBullet.speed = 600.0;
+                    newBullet.speed = 1000.0;
 
                     double offset = 25.0;
                     newBullet.x = playerX + Math.Cos(playerA) * offset;
@@ -857,6 +1192,11 @@ namespace oblutkostein_3D
                     shootSound.Play();
                 }
             }
+
+            if (e.KeyCode == Keys.R && isGameOver)
+            {
+                RestartGame();
+            }
         }
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
@@ -865,6 +1205,20 @@ namespace oblutkostein_3D
             if (e.KeyCode == Keys.S) goDown = false;
             if (e.KeyCode == Keys.A) goLeft = false;
             if (e.KeyCode == Keys.D) goRight = false;
+        }
+
+        void RestartGame()
+        {
+            playerHealth = 100;
+            score = 0;
+            currentRound = 0;
+            isGameOver = false;
+
+            playerX = 150;
+            playerY = 150;
+
+            bullets.Clear();
+            NextRound(); 
         }
     }
 }
