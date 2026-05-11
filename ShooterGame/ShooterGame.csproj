@@ -50,6 +50,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bullet.cs" />
+    <Compile Include="BulletManager.cs" />
+    <Compile Include="EnemyManager.cs" />
     <Compile Include="GameControls.cs" />
     <Compile Include="GameForm.cs">
       <SubType>Form</SubType>
@@ -57,6 +60,7 @@
     <Compile Include="GameForm.Designer.cs">
       <DependentUpon>GameForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="GameState.cs" />
     <Compile Include="Level.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -101,6 +105,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Raycaster.cs" />
+    <Compile Include="Sprite.cs" />
     <Compile Include="Textures.cs" />
     <Compile Include="ZoneData.cs" />
   </ItemGroup>

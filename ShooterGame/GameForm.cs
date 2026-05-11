@@ -50,6 +50,9 @@ namespace ShooterGame
             Application.Idle += GameLoop;
             lastTime = stopwatch.ElapsedMilliseconds; // set last time to current time
 
+            GameState.Reset();
+            EnemyManager.StartNextRound();
+
             //GameControls.InitController();
         }
 
@@ -63,6 +66,21 @@ namespace ShooterGame
 
             Player.HandleMovement();
             Player.HandleRotation();
+
+            if (!GameState.IsGameOver)
+            {
+                if (GameState.ShootTimer > 0) GameState.ShootTimer -= deltaTime;
+                if (GameState.ScreenFlashTimer > 0) GameState.ScreenFlashTimer -= deltaTime;
+
+                BulletManager.Update(deltaTime);
+                EnemyManager.Update(deltaTime);
+
+                if (EnemyManager.RoundOver())
+                    EnemyManager.StartNextRound();
+
+                if (GameState.PlayerHealth <= 0)
+                    GameState.IsGameOver = true;
+            }
 
             currentLevel.Invalidate();
         }
@@ -83,6 +101,14 @@ namespace ShooterGame
 
             if (e.KeyCode == GameControls.camLeft) Player.camLeft = true;
             if (e.KeyCode == GameControls.camRight) Player.camRight = true;
+            if (e.KeyCode == Keys.Space) BulletManager.Shoot();
+            if (e.KeyCode == Keys.R && GameState.IsGameOver)
+            {
+                GameState.Reset();
+                Player.x = 400; Player.y = 300;
+                BulletManager.bullets.Clear();
+                EnemyManager.StartNextRound();
+            }
         }
 
         protected override void OnKeyUp(KeyEventArgs e)

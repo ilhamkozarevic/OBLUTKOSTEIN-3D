@@ -17,9 +17,9 @@ namespace ShooterGame
 
         private Dictionary<string, ZoneData> zoneTypes = new Dictionary<string, ZoneData>()
         {
-            {"room_grass_sky", new ZoneData(0, 2, 1)},
-            {"wall_sponge",    new ZoneData(3, 1, 1)},
-            {"wood_door",      new ZoneData(4, 1, 1)}
+            {"room_grass_sky", new ZoneData(0, 1, 1)},
+            {"wall_sponge",    new ZoneData(7, 1, 1)},
+            {"wood_door",      new ZoneData(2, 1, 1)}
         };
 
         public List<Rectangle> collisionRects;

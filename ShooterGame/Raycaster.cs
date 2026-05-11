@@ -32,6 +32,9 @@ namespace ShooterGame
 
         private static float[] distanceTable;
 
+        // Za spriteove
+        private static float[] depthBuffer = new float[RAYCASTER_RESOLUTION];
+
         public static void DrawRays3D(Graphics g)
         {
             float rayAngle = Player.angle - (DEG_IN_RAD * FOV / 2);
@@ -53,6 +56,7 @@ namespace ShooterGame
 
                 fixed (byte* texPtr = Textures.AllTextures) // gleda teksture preko pointera da bude brze
                 fixed (byte* gunPtr = Textures.gunTexture)
+                fixed (byte* sprPtr = Textures.SpriteTextures)
                 {
                     for (int r = 0; r < RAYCASTER_RESOLUTION; r++)
                     {
@@ -202,6 +206,8 @@ namespace ShooterGame
                         // fisheye fix
                         float raFix = (float)Math.Cos(rayAngle - Player.angle);
                         rDist *= raFix;
+                        
+                        depthBuffer[r] = (float)rDist;
 
                         // -- CRTANJE ZIDOVA --
 
@@ -288,9 +294,9 @@ namespace ShooterGame
                             // sprema indeks potrebnog piksela u bufferu
                             int floor_pixel_idx = (ty_idx * TEX_W + tx_idx) * 3 + floorTexOffset;
 
-                            byte floor_r = texPtr[floor_pixel_idx + 0];
-                            byte floor_g = texPtr[floor_pixel_idx + 1];
-                            byte floor_b = texPtr[floor_pixel_idx + 2];
+                            byte floor_r = (byte)(texPtr[floor_pixel_idx + 0] + 20);
+                            byte floor_g = (byte)(texPtr[floor_pixel_idx + 0] + 20);
+                            byte floor_b = (byte)(texPtr[floor_pixel_idx + 0] + 20);
 
                             int floor_argb = (255 << 24) | (floor_r << 16) | (floor_g << 8) | floor_b;
 
@@ -324,6 +330,154 @@ namespace ShooterGame
                         rayAngle += (FOV / (float)RAYCASTER_RESOLUTION) * DEG_IN_RAD;
                     }
 
+                    List<Sprite> sortedEnemies = EnemyManager.enemies
+                        .Where(e => e.state != 0)
+                        .OrderByDescending(e =>
+                        {
+                            float dx = e.x - px;
+                            float dy = e.y - py;
+                            return dx * dx + dy * dy; // No need for Math.Sqrt just for sorting
+                        }).ToList();
+
+                    foreach (Sprite sp in sortedEnemies)
+                    {
+                        float sx = sp.x - px;
+                        float sy = sp.y - py;
+                        float dist = (float)Math.Sqrt(sx * sx + sy * sy);
+
+                        float spriteAngle = (float)Math.Atan2(sy, sx) - Player.angle;
+                        while (spriteAngle <= -Math.PI) spriteAngle += TWO_PI;
+                        while (spriteAngle > Math.PI) spriteAngle -= TWO_PI;
+
+                        if (dist > 0.5f && Math.Abs(spriteAngle) < (FOV * DEG_IN_RAD) / 1.5f)
+                        {
+                            float baseSize = Math.Abs((64.0f * WINDOW_HEIGHT) / dist);
+                            float spriteW = baseSize * sp.w;
+                            float spriteH = baseSize * sp.h;
+                            float zOffset = (sp.z * WINDOW_HEIGHT) / dist;
+
+                            float screenX = (spriteAngle / (FOV * DEG_IN_RAD)) * WINDOW_WIDTH + (WINDOW_WIDTH / 2.0f);
+                            float screenY = (WINDOW_HEIGHT / 2.0f) + zOffset;
+
+                            int startX = (int)(screenX - spriteW / 2);
+                            int endX = (int)(screenX + spriteW / 2);
+                            int startY = (int)(screenY - spriteH / 2);
+                            int endY = (int)(screenY + spriteH / 2);
+
+                            int drawStartX = Math.Max(0, startX);
+                            int drawEndX = Math.Min(WINDOW_WIDTH - 1, endX);
+                            int drawStartY = Math.Max(0, startY);
+                            int drawEndY = Math.Min(WINDOW_HEIGHT - 1, endY);
+
+                            int spriteOffset = sp.map * 3072; 
+
+                            for (int screenX_idx = drawStartX; screenX_idx < drawEndX; screenX_idx++)
+                            {
+                                int rayIdx = (screenX_idx * RAYCASTER_RESOLUTION) / WINDOW_WIDTH;
+
+                                if (dist < depthBuffer[rayIdx])
+                                {
+                                    int texX = (int)(((screenX_idx - startX) * 32) / spriteW);
+
+                                    for (int screenY_idx = drawStartY; screenY_idx < drawEndY; screenY_idx++)
+                                    {
+                                        int texY = (int)(((screenY_idx - startY) * 32) / spriteH);
+
+                                        int pIdx = spriteOffset + (texY * 32 + texX) * 3;
+                                        byte sp_r = sprPtr[pIdx + 0];
+                                        byte sp_g = sprPtr[pIdx + 1];
+                                        byte sp_b = sprPtr[pIdx + 2];
+
+                                        if (sp_r == 255 && sp_g == 0 && sp_b == 255) continue;
+
+                                        if (sp.hitTimer > 0)
+                                        {
+                                            sp_r = (byte)Math.Min(sp_r + 100, 255);
+                                            sp_g = (byte)(sp_g * 0.4);
+                                            sp_b = (byte)(sp_b * 0.4);
+                                        }
+
+                                        int sp_argb = (255 << 24) | (sp_r << 16) | (sp_g << 8) | sp_b;
+
+                                        screenPtr[screenY_idx * WINDOW_WIDTH + screenX_idx] = sp_argb;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // --- CRTANJE METAKA (BULLETS) ---
+                    foreach (Bullet b in BulletManager.bullets)
+                    {
+                        float bX = (float)(b.x - Player.x);
+                        float bY = (float)(b.y - Player.y);
+
+                        float bulletDist = (float)Math.Sqrt(bX * bX + bY * bY);
+
+                        float bulletAngle = (float)Math.Atan2(bY, bX) - Player.angle;
+                        while (bulletAngle <= -Math.PI) bulletAngle += (float)(2.0 * Math.PI);
+                        while (bulletAngle > Math.PI) bulletAngle -= (float)(2.0 * Math.PI);
+
+                        float correctedBulletDist = bulletDist * (float)Math.Cos(bulletAngle);
+
+                        float fovRad = FOV * DEG_IN_RAD;
+                        if (correctedBulletDist > 0.1f && Math.Abs(bulletAngle) < fovRad / 1.1f)
+                        {
+                            float windowH = WINDOW_HEIGHT;
+                            float horizon = windowH / 2.0f;
+                            float maxBulletDist = bulletDist;
+                            float bOffY = (float)b.distanceTraveled;
+
+                            float drawY_mapped = windowH - (bOffY * (windowH - horizon) / maxBulletDist);
+                            if (drawY_mapped < horizon) drawY_mapped = horizon;
+
+                            int screenX = (int)((bulletAngle / fovRad) * WINDOW_WIDTH + (WINDOW_WIDTH / 2));
+                            int screenY = (int)drawY_mapped;
+
+                            float bulletSizeOnScreen = (5.0f * WINDOW_HEIGHT) / correctedBulletDist;
+                            if (bulletSizeOnScreen < 2) bulletSizeOnScreen = 2;
+                            if (bulletSizeOnScreen > 40) bulletSizeOnScreen = 40;
+
+                            int radius = (int)(bulletSizeOnScreen / 2);
+
+                            for (int y = -radius; y <= radius; y++)
+                            {
+                                for (int x = -radius; x <= radius; x++)
+                                {
+                                    int pX = screenX + x;
+                                    int pY = screenY + y;
+
+                                    if (pX >= 0 && pX < WINDOW_WIDTH && pY >= 0 && pY < WINDOW_HEIGHT)
+                                    {
+                                        int rayIdx = (pX * RAYCASTER_RESOLUTION) / WINDOW_WIDTH;
+
+                                        if (rayIdx >= 0 && rayIdx < depthBuffer.Length)
+                                        {
+                                            if (true)
+                                            {
+                                                float distSq = x * x + y * y;
+                                                float maxDistSq = radius * radius;
+                                                int bulletColor = 0;
+
+                                                if (distSq < maxDistSq * 0.15f) // Core
+                                                    bulletColor = unchecked((int)0xFFFFFFFF);
+                                                else if (distSq < maxDistSq * 0.45f) // Middle
+                                                    bulletColor = unchecked((int)0xFFFFFF00);
+                                                else if (distSq < maxDistSq) // Outer
+                                                    bulletColor = unchecked((int)0xFFFF4500);
+
+                                                if (bulletColor != 0)
+                                                {
+                                                    screenPtr[pY * WINDOW_WIDTH + pX] = bulletColor;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     // GUN TEXTURING GOES HERE
                     int baseGunY = WINDOW_HEIGHT - 32 * 4 + 3;
                     int baseGunX = WINDOW_WIDTH / 2 - 16 * 4;
@@ -331,7 +485,7 @@ namespace ShooterGame
                     if (Player.up || Player.down || Player.left || Player.right)
                     {
                         float bobSpeed = (int)(GameForm.stopwatch.ElapsedMilliseconds * 0.015f);
-                        Console.WriteLine(Player.velocityVector);
+
                         baseGunX += (int)(Math.Sin(bobSpeed) * 8);
                         baseGunY -= (int)(Math.Abs(Math.Cos(bobSpeed) * 1));
                     }
@@ -382,7 +536,7 @@ namespace ShooterGame
 
             if (mapX >= 0 && mapX < MAP_WIDTH && mapY >= 0 && mapY < MAP_HEIGHT)
             {
-                if (map[mapX, mapY] == 4)
+                if (map[mapX, mapY] == 2)
                 {
                     map[mapX, mapY] = 0;
 
