@@ -132,12 +132,14 @@ namespace oblutkostein_3D
             public int type;     //key, enemy
             public int state;    //on, off
             public int map;      //texture to show
-            public int x, y, z;  //position
+            public double x, y;  //position
+            public int z;
             public double w, h;
             public int health;
             public double hitTimer;
             public double speed;
             public double damageTimer;
+            public int damage;
         }
 
         double enemyAttackRange = 45.0;
@@ -607,6 +609,9 @@ namespace oblutkostein_3D
             }
 
             // --- CRTANJE SPRITE-OVA ---
+
+            SortSprites();
+
             for (int i = 0; i < sp.Length; i++)
             {
                 // Preskoči ako neprijatelj ne postoji ili je mrtav
@@ -810,40 +815,6 @@ namespace oblutkostein_3D
                     g.DrawString(scoreText, smallFont, Brushes.White, (viewWidth - 150) / 2, (viewHeight / 2) + 40);
                     g.DrawString(restartText, smallFont, Brushes.Gold, (viewWidth - 170) / 2, (viewHeight / 2) + 70);
                 }
-            }
-        }
-
-        void NextRound()
-        {
-            currentRound++;
-            enemiesToSpawn = 1 + currentRound;
-            float currentSpeed = enemyBaseSpeed + (currentRound * 10f); 
-
-            sp = new sprite[enemiesToSpawn];
-            enemyPaths = new List<Point>[enemiesToSpawn];
-            pathUpdateTimers = new double[enemiesToSpawn];
-
-            int[,] spawnPoints = {
-            { 1, 7 }, { 2, 7 }, { 1, 10 }, { 2, 10 },
-            { 4, 1 }, { 5, 1 }, { 6, 1 },  { 7, 1  },
-            { 8, 1 }, { 4, 7 }, { 5, 7 },  { 6, 7  }
-             };
-
-            for (int i = 0; i < enemiesToSpawn; i++)
-            {
-                sp[i] = new sprite();
-                sp[i].type = 1;
-                sp[i].state = 1;
-                sp[i].health = 3; 
-                sp[i].map = 0;
-                sp[i].w = 1.0;
-                sp[i].h = 1.0;
-                sp[i].z = 10;
-                sp[i].speed = currentSpeed;
-
-                int idx = i % spawnPoints.GetLength(0);
-                sp[i].x = spawnPoints[idx, 0] * 64 + 32;
-                sp[i].y = spawnPoints[idx, 1] * 64 + 32;
             }
         }
 
@@ -1072,7 +1043,7 @@ namespace oblutkostein_3D
 
                 if (distToPlayer < enemyAttackRange && sp[i].damageTimer <= 0)
                 {
-                    playerHealth -= 2;
+                    playerHealth -= sp[i].damage;
                     sp[i].damageTimer = 1.0; 
                     screenFlashTimer = 0.2;
                     if (playerHealth <= 0) playerHealth = 0;
@@ -1130,17 +1101,17 @@ namespace oblutkostein_3D
                 {
                     if (moveX != 0 || moveY != 0)
                     {
-                        int newX = sp[i].x + (int)moveX;
-                        int newY = sp[i].y + (int)moveY;
+                        double newX = sp[i].x + moveX;
+                        double newY = sp[i].y + moveY;
 
-                        int checkX = (moveX > 0) ? newX + stopDistance : newX - stopDistance;
-                        if (mapW[(sp[i].y / 64) * mapX + (checkX / 64)] == 0)
+                        int checkX = (int)((moveX > 0) ? newX + stopDistance : newX - stopDistance);
+                        if (mapW[((int)sp[i].y / 64) * mapX + (checkX / 64)] == 0)
                         {
                             sp[i].x = newX;
                         }
 
-                        int checkY = (moveY > 0) ? newY + stopDistance : newY - stopDistance;
-                        if (mapW[(checkY / 64) * mapX + (sp[i].x / 64)] == 0)
+                        int checkY = (int)((moveY > 0) ? newY + stopDistance : newY - stopDistance);
+                        if (mapW[(checkY / 64) * mapX + ((int)sp[i].x / 64)] == 0)
                         {
                             sp[i].y = newY;
                         }
@@ -1219,6 +1190,112 @@ namespace oblutkostein_3D
 
             bullets.Clear();
             NextRound(); 
+        }
+
+        private sprite CreateEnemy(int enemyType, int spawnX, int spawnY)
+        {
+            sprite s = new sprite();
+            s.type = 1;
+            s.state = 1;
+            s.map = enemyType; // 0 = Muljosa, 1 = Keno, 2 = Belmo
+            s.w = 1.0;
+            s.h = 1.0;
+            s.z = 10;
+            s.x = spawnX;
+            s.y = spawnY;
+
+            switch (enemyType)
+            {
+                case 0: s.health = 1; s.speed = 200; s.damage = 1; break; // Muljosa, 1 HP
+                case 1: s.health = 5; s.speed = 90; s.damage = 5; break; // Keno, 5 HP
+                case 2: s.health = 20; s.speed = 50; s.damage = 15; break; // Belmo, 20 HP
+            }
+
+            return s;
+        }
+
+        void NextRound()
+        {
+            currentRound = currentRound + 1;
+
+            int count0 = 0; // Muljosa
+            int count1 = 0; // Keno
+            int count2 = 0; // Belmo
+
+            if (currentRound == 1) { count0 = 1; count1 = 0; count2 = 0; }
+            else if (currentRound == 2) { count0 = 3; count1 = 0; count2 = 0; }
+            else if (currentRound == 3) { count0 = 5; count1 = 1; count2 = 0; }
+            else if (currentRound == 4) { count0 = 4; count1 = 2; count2 = 0; }
+            else if (currentRound == 5) { count0 = 4; count1 = 3; count2 = 1; }
+            else if (currentRound == 6) { count0 = 3; count1 = 4; count2 = 1; }
+            else if (currentRound == 7) { count0 = 3; count1 = 4; count2 = 2; }
+            else if (currentRound == 8) { count0 = 2; count1 = 5; count2 = 2; }
+            else
+            {
+                int tezina = currentRound - 8;
+                count0 = 2 + tezina;
+                count1 = 5 + tezina;
+                count2 = 2 + tezina;
+            }
+
+            enemiesToSpawn = count0 + count1 + count2;
+
+            sp = new sprite[enemiesToSpawn];
+            enemyPaths = new List<Point>[enemiesToSpawn];
+            pathUpdateTimers = new double[enemiesToSpawn];
+
+            int[] spawnX = { 1, 2, 1, 2, 4, 5, 6, 7, 8, 4, 5, 6 };
+            int[] spawnY = { 7, 7, 10, 10, 1, 1, 1, 1, 1, 7, 7, 7 };
+            int brojLokacija = 12; 
+
+            int idx = 0;
+
+            //---CRTANJE ENEMYJA---
+            for (int i = 0; i < count0; i++)
+            {
+                int lokacijaIdx = idx % brojLokacija;
+                int sx = spawnX[lokacijaIdx] * 64 + 32;
+                int sy = spawnY[lokacijaIdx] * 64 + 32;
+                sp[idx] = CreateEnemy(0, sx, sy);
+                idx = idx + 1;
+            }
+
+            for (int i = 0; i < count1; i++)
+            {
+                int lokacijaIdx = idx % brojLokacija;
+                int sx = spawnX[lokacijaIdx] * 64 + 32;
+                int sy = spawnY[lokacijaIdx] * 64 + 32;
+                sp[idx] = CreateEnemy(1, sx, sy);
+                idx = idx + 1;
+            }
+
+            for (int i = 0; i < count2; i++)
+            {
+                int lokacijaIdx = idx % brojLokacija;
+                int sx = spawnX[lokacijaIdx] * 64 + 32;
+                int sy = spawnY[lokacijaIdx] * 64 + 32;
+                sp[idx] = CreateEnemy(2, sx, sy);
+                idx = idx + 1;
+            }
+        }
+
+        private void SortSprites()
+        {
+            for (int i = 0; i < sp.Length - 1; i++)
+            {
+                for (int j = 0; j < sp.Length - i - 1; j++)
+                {
+                    double dist1 = Math.Sqrt(Math.Pow(sp[j].x - playerX, 2) + Math.Pow(sp[j].y - playerY, 2));
+                    double dist2 = Math.Sqrt(Math.Pow(sp[j + 1].x - playerX, 2) + Math.Pow(sp[j + 1].y - playerY, 2));
+                    
+                    if (dist1 < dist2)
+                    {
+                        sprite temp = sp[j];
+                        sp[j] = sp[j + 1];
+                        sp[j + 1] = temp;
+                    }
+                }
+            }
         }
     }
 }
